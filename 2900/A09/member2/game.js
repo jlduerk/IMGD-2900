@@ -141,20 +141,20 @@ PS.release = function( x, y, data, options ) {
 
 	//PS.debug( "PS.release() @ " + x + ", " + y + "\n" );
 
-	var color = PS.color(x,y);
+	var color = PS.color(x,y); // variable for coloring a bead
 
 	if (color === DEEP_BLUE) {
-		color = WHITE; // set star color
+		color = WHITE; // set star as white
 	}
 	else if (color === WHITE){
-		color = YELLOW;
+		color = YELLOW; // set star as yellow
 	}
 	else if (color === YELLOW){
-		color = DEEP_BLUE;
+		color = DEEP_BLUE; // reset star back to sky color
 	}
-	PS.color(x, y, color);
+	PS.color(x, y, color); // call color function
 
-	PS.audioPlay( "fx_pop" );
+	PS.audioPlay( "fx_pop" ); // play pop sound
 
 	// Add code here for when the mouse button/touch is released over a bead.
 };
