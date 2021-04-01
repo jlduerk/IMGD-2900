@@ -22,21 +22,76 @@ Any value returned is ignored.
 [options : Object] = A JavaScript object with optional data properties; see API documentation for details.
 */
 
+var GRID_WIDTH = 25;
+var GRID_HEIGHT = 20;
+var GROUND_LEVEl =16;
+var COLOR_SKY = 0x6A98D2;
+var COLOR_GROUND = 0x5CD236;
+var COLOR_SEED = 0xD29A3E;
+var SPEED = 6; // 10 fps
+var DROP_SOUND = "xylo_d5";
+var LAND_SOUND = "xylo_d7";
+
+var seeds = [];
+var seed_Tracker = [];
+
+var bury = function (x, y){
+	PS.color(x, y, PS.COLOR_WHITE);
+	PS.audioPlay(LAND_SOUND);
+}
+
+var animate = function (){
+	var len, i, seed, x, y;
+	len = seeds.length;
+	i = 0;
+	while (i < len){
+		seed = seeds[i];
+		x = seed[0];
+		y = seed[1];
+		if (y < GROUND_LEVEl) {
+			PS.color(x, y, COLOR_SKY);
+			y += 1;
+			seed[1] = y;
+			if (y < GROUND_LEVEl){
+				PS.color(x, y, COLOR_SEED);
+			}
+			else {
+				bury(x, y);
+			}
+			i += 1;
+		}
+		else {
+			PS.color(x, y, COLOR_SKY);
+			seeds.splice(i, 1);
+			len -= 1;
+		}
+	}
+}
 PS.init = function( system, options ) {
 	// Change this string to your team name
 	// Use only ALPHABETIC characters
 	// No numbers, spaces or punctuation!
 
-	const TEAM = "teamname";
+	const TEAM = "Frog";
 
 	// Begin with essential setup
 	// Establish initial grid size
 
-	PS.gridSize( 8, 8 ); // or whatever size you want
+	PS.gridSize( GRID_WIDTH, GRID_HEIGHT); // or whatever size you want
 
 	// Install additional initialization code
 	// here as needed
 
+	PS.gridColor(0x6A98D2);
+	PS.border(PS.ALL, PS.ALL, 0);
+	PS.color(PS.ALL, PS.ALL, COLOR_SKY);
+	PS.color(PS.ALL, 19, COLOR_GROUND);
+	PS.color(PS.ALL, 18, COLOR_GROUND);
+	PS.color(PS.ALL, 17, COLOR_GROUND);
+	PS.statusText("Flower Sim");
+	PS.statusColor(0x4814A6);
+
+	PS.timerStart(SPEED, animate);
 	// PS.dbLogin() must be called at the END
 	// of the PS.init() event handler (as shown)
 	// DO NOT MODIFY THIS FUNCTION CALL
@@ -66,7 +121,16 @@ PS.touch = function( x, y, data, options ) {
 	// to inspect x/y parameters:
 
 	// PS.debug( "PS.touch() @ " + x + ", " + y + "\n" );
-
+	if (y < GROUND_LEVEl){
+		PS.color(x, y, COLOR_SEED);
+		PS.audioPlay(DROP_SOUND);
+	}
+	else if (y = GROUND_LEVEl){
+		bury(x, y);
+	}
+	seeds.push([x,y]);
+	seed_Tracker.push([x,16]);
+	PS.debug("seedTracker:" + seed_Tracker);
 	// Add code here for mouse clicks/touches
 	// over a bead.
 };
@@ -85,6 +149,8 @@ PS.release = function( x, y, data, options ) {
 	// Uncomment the following code line to inspect x/y parameters:
 
 	// PS.debug( "PS.release() @ " + x + ", " + y + "\n" );
+//	0xD29A3E
+//	0xD2B26A
 
 	// Add code here for when the mouse button/touch is released over a bead.
 };
