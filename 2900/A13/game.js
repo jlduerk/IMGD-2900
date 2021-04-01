@@ -22,7 +22,7 @@ Any value returned is ignored.
 [options : Object] = A JavaScript object with optional data properties; see API documentation for details.
 */
 
-var GRID_WIDTH = 40;
+var GRID_WIDTH = 32;
 var GRID_HEIGHT = 20;
 var GROUND_LEVEL = 16;
 var COLOR_SKY = 0x6A98D2;
@@ -58,12 +58,17 @@ var bury = function (x, y) {
 }
 
 var growRose = function(x) {
+	var rootTimer;
 	var smolTimer;
 	var saplingTimer;
 	var budTimer;
 	var fullFlowerTimer;
 	var deadFlowerTimer;
 	var ripTimer;
+
+	var root = function() {
+		PS.color(x, GROUND_LEVEL, 0x4caf4f);
+	}
 
 	var smol = function() {
 		PS.color(x, GROUND_LEVEL, 0x4caf4f);
@@ -103,6 +108,7 @@ var growRose = function(x) {
 	}
 
 	var deadFlower = function() {
+		PS.timerStop(rootTimer);
 		PS.color(x, GROUND_LEVEL, 0x9e9e24);
 		PS.color(x, GROUND_LEVEL - 1, 0x827717);
 		if (x+1 < GRID_WIDTH) PS.color(x + 1, GROUND_LEVEL - 2, 0x9e9e24);
@@ -154,6 +160,7 @@ var growRose = function(x) {
 		}
 	}
 
+	rootTimer = PS.timerStart(6, root);
 	smolTimer = PS.timerStart(60, smol);
 	saplingTimer = PS.timerStart(120, sapling);
 	budTimer = PS.timerStart(180, bud);
@@ -249,7 +256,9 @@ PS.touch = function( x, y, data, options ) {
 
 	// PS.debug( "PS.touch() @ " + x + ", " + y + "\n" );
 	if (y < GROUND_LEVEL){
-		PS.color(x, y, COLOR_SEED);
+		if (PS.color(x,y) == COLOR_SKY) {
+			PS.color(x, y, COLOR_SEED);
+		}
 		PS.audioPlay(DROP_SOUND);
 	}
 	else if (y = GROUND_LEVEL){
