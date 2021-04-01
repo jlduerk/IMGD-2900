@@ -22,9 +22,9 @@ Any value returned is ignored.
 [options : Object] = A JavaScript object with optional data properties; see API documentation for details.
 */
 
-var GRID_WIDTH = 25;
+var GRID_WIDTH = 40;
 var GRID_HEIGHT = 20;
-var GROUND_LEVEl =16;
+var GROUND_LEVEL = 16;
 var COLOR_SKY = 0x6A98D2;
 var COLOR_GROUND = 0x5CD236;
 var COLOR_SEED = 0xD29A3E;
@@ -35,12 +35,135 @@ var LAND_SOUND = "xylo_d7";
 var seeds = [];
 var seed_Tracker = [];
 
-var bury = function (x, y){
-	PS.color(x, y, PS.COLOR_WHITE);
+var bury = function (x, y) {
+	if (PS.color(x,y) == COLOR_SKY) {
+		PS.color(x, y, PS.COLOR_WHITE);
+	}
 	PS.audioPlay(LAND_SOUND);
+	//PS.debug("seedTracker:" + seed_Tracker);
+	var alreadyHasPlant = false;
+	for (var i = 0; i < seed_Tracker.length; i++) {
+		if (x == seed_Tracker[i][0] || x + 1 == seed_Tracker[i][0] || x + 2 == seed_Tracker[i][0] || x - 1 == seed_Tracker[i][0] 
+			|| x - 2 == seed_Tracker[i][0] || x + 3 == seed_Tracker[i][0] || x + 4 == seed_Tracker[i][0] || 
+			x - 3 == seed_Tracker[i][0] || x - 4 == seed_Tracker[i][0]) {
+			alreadyHasPlant = true;
+		}
+	}
+	if (!alreadyHasPlant) {
+		seed_Tracker.push([x,16]);
+		growRose(x);
+	} else {
+		PS.color(x, y, COLOR_SKY)
+	}
 }
 
-var animate = function (){
+var growRose = function(x) {
+	var smolTimer;
+	var saplingTimer;
+	var budTimer;
+	var fullFlowerTimer;
+	var deadFlowerTimer;
+	var ripTimer;
+
+	var smol = function() {
+		PS.color(x, GROUND_LEVEL, 0x4caf4f);
+		PS.color(x, GROUND_LEVEL - 1, 0x3d9e40);
+		if (x+1 < GRID_WIDTH) PS.color(x + 1, GROUND_LEVEL - 2, 0x4caf4f);
+		PS.timerStop(smolTimer);
+	}
+	
+	var sapling = function() {
+		if (x-1 > 0) PS.color(x - 1, GROUND_LEVEL - 2, 0x8bc34a);
+		if (x+2 < GRID_WIDTH) PS.color(x + 2, GROUND_LEVEL - 3, 0x8bc34a);
+		PS.timerStop(saplingTimer);
+	}
+
+	var bud = function() {
+		PS.color(x, GROUND_LEVEL - 2, 0x4caf4f);
+		PS.color(x, GROUND_LEVEL - 3, 0x4caf4f);
+		PS.color(x, GROUND_LEVEL - 4, 0x009687);
+		PS.color(x, GROUND_LEVEL - 5, 0xc62828);
+		if (x+1 < GRID_WIDTH) PS.color(x + 1, GROUND_LEVEL - 6, 0xef5250);
+		if (x-1 > 0) PS.color(x - 1, GROUND_LEVEL - 6, 0xc62828);
+		PS.timerStop(budTimer);
+	}
+
+	var fullFlower = function() {
+		if (x+1 < GRID_WIDTH) PS.color(x + 1, GROUND_LEVEL - 5, 0xb71c1c);
+		if (x-1 > 0) PS.color(x - 1, GROUND_LEVEL - 5, 0xe91e62);
+		PS.color(x, GROUND_LEVEL - 6, 0xef5250);
+		if (x+2 < GRID_WIDTH) PS.color(x + 2, GROUND_LEVEL - 6, 0xe91e62);
+		if (x-2 > 0) PS.color(x - 2, GROUND_LEVEL - 6, 0xc62828);
+		PS.color(x, GROUND_LEVEL - 7, 0xe57373);
+		if (x+1 < GRID_WIDTH) PS.color(x + 1, GROUND_LEVEL - 7, 0xe91e62);
+		if (x-2 > 0) PS.color(x - 2, GROUND_LEVEL - 7, 0xe91e62);
+		if (x-1 > 0) PS.color(x - 1, GROUND_LEVEL - 7, 0xef5250);
+		if (x-1 > 0) PS.color(x - 1, GROUND_LEVEL - 8, 0xe91e62);
+		PS.timerStop(fullFlowerTimer);
+	}
+
+	var deadFlower = function() {
+		PS.color(x, GROUND_LEVEL, 0x9e9e24);
+		PS.color(x, GROUND_LEVEL - 1, 0x827717);
+		if (x+1 < GRID_WIDTH) PS.color(x + 1, GROUND_LEVEL - 2, 0x9e9e24);
+		if (x+2 < GRID_WIDTH) PS.color(x + 2, GROUND_LEVEL - 1, 0xc0ca33);
+		if (x-1 > 0) PS.color(x - 1, GROUND_LEVEL - 2, 0xc0ca33);
+		PS.color(x, GROUND_LEVEL - 2, 0x9e9e24);
+		PS.color(x, GROUND_LEVEL - 3, 0x9e9e24);
+		PS.color(x, GROUND_LEVEL - 4, 0x827717);
+		PS.color(x, GROUND_LEVEL - 5, 0x946276);
+		if (x+1 < GRID_WIDTH) PS.color(x + 1, GROUND_LEVEL - 5, 0x946276);
+		if (x-1 > 0) PS.color(x - 1, GROUND_LEVEL - 7, 0x946276);
+		PS.color(x, GROUND_LEVEL - 6, 0x9c4665);
+		if (x-1 > 0) PS.color(x - 1, GROUND_LEVEL - 6, 0x9c4665);
+		if (x+1 < GRID_WIDTH) PS.color(x + 1, GROUND_LEVEL - 6, 0x8c435f);
+		PS.color(x, GROUND_LEVEL - 7, 0x8c435f);
+		if (x-2 > 0) PS.color(x - 2, GROUND_LEVEL - 7, 0xe91e62);
+		if (x+2 < GRID_WIDTH) PS.color(x + 2, GROUND_LEVEL - 3, COLOR_SKY);
+		if (x-1 > 0) PS.color(x - 1, GROUND_LEVEL - 5, COLOR_SKY);
+		if (x-1 > 0) PS.color(x - 1, GROUND_LEVEL - 8, COLOR_SKY);
+		if (x-2 > 0) PS.color(x - 2, GROUND_LEVEL - 6, COLOR_SKY);
+		if (x-2 > 0) PS.color(x - 2, GROUND_LEVEL - 7, COLOR_SKY);
+		if (x+1 < GRID_WIDTH) PS.color(x + 1, GROUND_LEVEL - 7, COLOR_SKY);
+		if (x+2 < GRID_WIDTH) PS.color(x + 2, GROUND_LEVEL - 6, COLOR_SKY);
+		PS.timerStop(deadFlowerTimer);
+	}
+
+	var rip = function() {
+		PS.color(x, GROUND_LEVEL, COLOR_SKY);
+		PS.color(x, GROUND_LEVEL - 1, COLOR_SKY);
+		if (x+1 < GRID_WIDTH) PS.color(x + 1, GROUND_LEVEL - 2, COLOR_SKY);
+		if (x+2 < GRID_WIDTH) PS.color(x + 2, GROUND_LEVEL - 1, COLOR_SKY);
+		if (x-1 > 0) PS.color(x - 1, GROUND_LEVEL - 2, COLOR_SKY);
+		PS.color(x, GROUND_LEVEL - 2, COLOR_SKY);
+		PS.color(x, GROUND_LEVEL - 3, COLOR_SKY);
+		PS.color(x, GROUND_LEVEL - 4, COLOR_SKY);
+		PS.color(x, GROUND_LEVEL - 5, COLOR_SKY);
+		if (x+1 < GRID_WIDTH) PS.color(x + 1, GROUND_LEVEL - 5, COLOR_SKY);
+		if (x-1 > 0) PS.color(x - 1, GROUND_LEVEL - 7, COLOR_SKY);
+		PS.color(x, GROUND_LEVEL - 6, COLOR_SKY);
+		if (x-1 > 0) PS.color(x - 1, GROUND_LEVEL - 6, COLOR_SKY);
+		if (x+1 < GRID_WIDTH) PS.color(x + 1, GROUND_LEVEL - 6, COLOR_SKY);
+		PS.color(x, GROUND_LEVEL - 7, COLOR_SKY);
+		if (x-2 > 0) PS.color(x - 2, GROUND_LEVEL - 7, COLOR_SKY);
+		PS.timerStop(ripTimer);
+		for (var i = 0; i < seed_Tracker.length; i++) {
+			if (x == seed_Tracker[i][0]) {
+				seed_Tracker.splice(i, 1);
+			}
+		}
+	}
+
+	smolTimer = PS.timerStart(60, smol);
+	saplingTimer = PS.timerStart(120, sapling);
+	budTimer = PS.timerStart(180, bud);
+	fullFlowerTimer = PS.timerStart(240, fullFlower);
+	deadFlowerTimer = PS.timerStart(360, deadFlower);
+	ripTimer = PS.timerStart(420, rip);
+
+}
+
+var animate = function () {
 	var len, i, seed, x, y;
 	len = seeds.length;
 	i = 0;
@@ -48,12 +171,14 @@ var animate = function (){
 		seed = seeds[i];
 		x = seed[0];
 		y = seed[1];
-		if (y < GROUND_LEVEl) {
-			PS.color(x, y, COLOR_SKY);
+		if (y < GROUND_LEVEL) {
+			if (PS.color(x,y) == COLOR_SEED) PS.color(x, y, COLOR_SKY);
 			y += 1;
 			seed[1] = y;
-			if (y < GROUND_LEVEl){
-				PS.color(x, y, COLOR_SEED);
+			if (y < GROUND_LEVEL){
+				if (PS.color(x,y) == COLOR_SKY) {
+					PS.color(x, y, COLOR_SEED);
+				}
 			}
 			else {
 				bury(x, y);
@@ -61,12 +186,14 @@ var animate = function (){
 			i += 1;
 		}
 		else {
-			PS.color(x, y, COLOR_SKY);
+			if (PS.color(x,y) == COLOR_SEED) PS.color(x, y, COLOR_SKY);
 			seeds.splice(i, 1);
 			len -= 1;
 		}
 	}
 }
+
+
 PS.init = function( system, options ) {
 	// Change this string to your team name
 	// Use only ALPHABETIC characters
@@ -121,16 +248,15 @@ PS.touch = function( x, y, data, options ) {
 	// to inspect x/y parameters:
 
 	// PS.debug( "PS.touch() @ " + x + ", " + y + "\n" );
-	if (y < GROUND_LEVEl){
+	if (y < GROUND_LEVEL){
 		PS.color(x, y, COLOR_SEED);
 		PS.audioPlay(DROP_SOUND);
 	}
-	else if (y = GROUND_LEVEl){
+	else if (y = GROUND_LEVEL){
 		bury(x, y);
 	}
 	seeds.push([x,y]);
-	seed_Tracker.push([x,16]);
-	PS.debug("seedTracker:" + seed_Tracker);
+	//PS.debug("seedTracker:" + seed_Tracker);
 	// Add code here for mouse clicks/touches
 	// over a bead.
 };
