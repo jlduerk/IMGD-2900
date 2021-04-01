@@ -222,7 +222,7 @@ PS.init = function( system, options ) {
 	PS.color(PS.ALL, 19, COLOR_GROUND);
 	PS.color(PS.ALL, 18, COLOR_GROUND);
 	PS.color(PS.ALL, 17, COLOR_GROUND);
-	PS.statusText("Flower Sim");
+	PS.statusText("Flower Garden");
 	PS.statusColor(0x4814A6);
 
 	PS.timerStart(SPEED, animate);
