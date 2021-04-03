@@ -52,8 +52,15 @@ var bury = function (x, y) {
 	}
 	if (!alreadyHasPlant) {
 		seed_Tracker.push([x,16]);
-		//Here we should choose a flower randomly to grow
-		growTulip(x);
+		var flow = Math.floor(Math.random()*3);
+		if (flow == 0){
+			growRose(x);
+		} else if (flow == 1){
+			growSunflower(x);
+		}
+		else if (flow == 2){
+			growTulip(x);
+		}
 	} else {
 		PS.color(x, y, COLOR_SKY)
 	}
