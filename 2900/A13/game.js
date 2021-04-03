@@ -281,8 +281,8 @@ var growSunflower = function(x) {
 	saplingTimer = PS.timerStart(120, sapling);
 	budTimer = PS.timerStart(180, bud);
 	fullFlowerTimer = PS.timerStart(240, fullFlower);
-	deadFlowerTimer = PS.timerStart(360, deadFlower);
-	ripTimer = PS.timerStart(420, rip);
+	deadFlowerTimer = PS.timerStart(370, deadFlower);
+	ripTimer = PS.timerStart(430, rip);
 }
 
 var growTulip = function(x) {
@@ -456,8 +456,8 @@ var growTulip = function(x) {
 	saplingTimer = PS.timerStart(120, sapling);
 	budTimer = PS.timerStart(180, bud);
 	fullFlowerTimer = PS.timerStart(240, fullFlower);
-	deadFlowerTimer = PS.timerStart(360, deadFlower);
-	ripTimer = PS.timerStart(420, rip);
+	deadFlowerTimer = PS.timerStart(370, deadFlower);
+	ripTimer = PS.timerStart(430, rip);
 }
 
 var growRose = function(x) {
@@ -568,8 +568,8 @@ var growRose = function(x) {
 	saplingTimer = PS.timerStart(120, sapling);
 	budTimer = PS.timerStart(180, bud);
 	fullFlowerTimer = PS.timerStart(240, fullFlower);
-	deadFlowerTimer = PS.timerStart(360, deadFlower);
-	ripTimer = PS.timerStart(420, rip);
+	deadFlowerTimer = PS.timerStart(370, deadFlower);
+	ripTimer = PS.timerStart(430, rip);
 
 }
 
