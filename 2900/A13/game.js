@@ -35,6 +35,7 @@ var LAND_SOUND = "xylo_d7";
 var seeds = [];
 var seed_Tracker = [];
 
+
 var bury = function (x, y) {
 	if (PS.color(x,y) == COLOR_SKY) {
 		PS.color(x, y, PS.COLOR_WHITE);
@@ -51,10 +52,405 @@ var bury = function (x, y) {
 	}
 	if (!alreadyHasPlant) {
 		seed_Tracker.push([x,16]);
-		growRose(x);
+		//Here we should choose a flower randomly to grow
+		growTulip(x);
 	} else {
 		PS.color(x, y, COLOR_SKY)
 	}
+}
+
+var growSunflower = function(x) {
+	var rootTimer;
+	var smolTimer;
+	var saplingTimer;
+	var budTimer;
+	var fullFlowerTimer;
+	var deadFlowerTimer;
+	var ripTimer;
+
+	var root = function() {
+		PS.color(x, GROUND_LEVEL, 0x558b2f);
+	}
+
+	var smol = function() {
+		PS.color(x, GROUND_LEVEL, 0x558b2f);
+		PS.color(x, GROUND_LEVEL - 1, 0x689f38);
+		PS.color(x, GROUND_LEVEL - 2, 0x7cb342);
+		if (x - 1 > 0) {
+			PS.color(x - 1, GROUND_LEVEL - 2, 0x558b2f);
+			PS.color(x - 1, GROUND_LEVEL - 3, 0x689f38);
+		}
+		if (x - 2 > 0) {
+			PS.color(x - 2, GROUND_LEVEL - 3, 0x7cb342);
+			PS.color(x - 2, GROUND_LEVEL - 4, 0x7cb342);
+		}
+		PS.timerStop(smolTimer);
+	}
+	
+	var sapling = function() {
+		PS.color(x, GROUND_LEVEL - 3, 0x689f38);
+		PS.color(x, GROUND_LEVEL - 4, 0x689f38);
+		PS.color(x, GROUND_LEVEL - 5, 0x689f38);
+		PS.color(x, GROUND_LEVEL - 6, 0x7cb342);
+		if (x + 1 < GRID_WIDTH) {
+			PS.color(x + 1, GROUND_LEVEL - 4, 0x558b2f);
+			PS.color(x + 1, GROUND_LEVEL - 5, 0x689f38);
+		}
+		if (x + 2 < GRID_WIDTH) {
+			PS.color(x + 2, GROUND_LEVEL - 5, 0x7cb342);
+			PS.color(x + 2, GROUND_LEVEL - 6, 0x7cb342);
+		}
+		PS.timerStop(saplingTimer);
+	}
+
+	var bud = function() {
+		PS.color(x, GROUND_LEVEL - 7, 0x7cb342);
+		PS.color(x, GROUND_LEVEL - 8, 0x7cb342);
+		if (x - 1 > 0) {
+			PS.color(x - 1, GROUND_LEVEL - 6, 0x8bc34a);
+			PS.color(x - 1, GROUND_LEVEL - 7, 0x689f38);
+		}
+		if (x - 2 > 0) {
+			PS.color(x - 2, GROUND_LEVEL - 7, 0x8bc34a);
+			PS.color(x - 2, GROUND_LEVEL - 8, 0x7cb342);
+		}
+		if (x + 1 < GRID_WIDTH) {
+			//PS.color(x + 1, GROUND_LEVEL - 8, 0x7cb342);
+			PS.color(x + 1, GROUND_LEVEL - 9, 0x689f38);
+		}
+		PS.timerStop(budTimer);
+	}
+
+	var fullFlower = function() {
+		PS.color(x, GROUND_LEVEL - 9, 0xffc400);
+		PS.color(x, GROUND_LEVEL - 13, 0xffd640);
+		PS.color(x, GROUND_LEVEL - 10, 0xa3710c);
+		PS.color(x, GROUND_LEVEL - 12, 0xa3710c);
+		PS.color(x, GROUND_LEVEL - 11, 0x8a5f0a);
+		if (x - 1 > 0) {
+			PS.color(x - 1, GROUND_LEVEL - 9, 0xffc400);
+			PS.color(x - 1, GROUND_LEVEL - 10, 0xffc400);
+			PS.color(x - 1, GROUND_LEVEL - 13, 0xffc400);
+			PS.color(x - 1, GROUND_LEVEL - 12, 0xffd640);
+			PS.color(x - 1, GROUND_LEVEL - 11, 0xa3710c);
+		}
+		if (x - 2 > 0) {
+			PS.color(x - 2, GROUND_LEVEL - 10, 0xffc400);
+			PS.color(x - 2, GROUND_LEVEL - 12, 0xffd640);
+			PS.color(x - 2, GROUND_LEVEL - 11, 0xffe57f);
+		}
+		if (x + 1 < GRID_WIDTH) {
+			PS.color(x + 1, GROUND_LEVEL - 9, 0xffe57f);
+			PS.color(x + 1, GROUND_LEVEL - 12, 0xffe57f);
+			PS.color(x + 1, GROUND_LEVEL - 13, 0xffe57f);
+			PS.color(x + 1, GROUND_LEVEL - 10, 0xffd640);
+			PS.color(x + 1, GROUND_LEVEL - 11, 0xa3710c);
+		}
+		if (x + 2 < GRID_WIDTH) {
+			PS.color(x + 2, GROUND_LEVEL - 11, 0xffe57f);
+			PS.color(x + 2, GROUND_LEVEL - 12, 0xffe57f);
+			PS.color(x + 2, GROUND_LEVEL - 10, 0xffd640);
+		}
+		PS.timerStop(fullFlowerTimer);
+	}
+
+	var deadFlower = function() {
+		PS.timerStop(rootTimer);
+		PS.color(x, GROUND_LEVEL, 0x706510);
+		PS.color(x, GROUND_LEVEL - 1, 0x706510);
+		PS.color(x, GROUND_LEVEL - 8, 0x706510);
+		PS.color(x, GROUND_LEVEL - 2, 0x827717);
+		PS.color(x, GROUND_LEVEL - 3, 0x827717);
+		PS.color(x, GROUND_LEVEL - 4, 0x827717);
+		PS.color(x, GROUND_LEVEL - 5, 0x827717);
+		PS.color(x, GROUND_LEVEL - 6, 0x827717);
+		PS.color(x, GROUND_LEVEL - 7, 0x453e0b);
+		PS.color(x, GROUND_LEVEL - 9, 0xc2850b);
+		PS.color(x, GROUND_LEVEL - 13, 0xd99709);
+		PS.color(x, GROUND_LEVEL - 10, 0x6d4c41);
+		PS.color(x, GROUND_LEVEL - 12, 0x6d4c41);
+		PS.color(x, GROUND_LEVEL - 11, 0x4e342e);
+		if (x - 1 > 0) {
+			PS.color(x - 1, GROUND_LEVEL - 1, 0x706510);
+			PS.color(x - 1, GROUND_LEVEL - 6, 0x706510);
+			PS.color(x - 1, GROUND_LEVEL - 2, 0x827717);
+			PS.color(x - 1, GROUND_LEVEL - 10, 0xc2850b);
+			PS.color(x - 1, GROUND_LEVEL - 9, 0xa3710c);
+			PS.color(x - 1, GROUND_LEVEL - 12, 0xa3710c);
+			PS.color(x - 1, GROUND_LEVEL - 13, 0xd99709);
+			PS.color(x - 1, GROUND_LEVEL - 11, 0x6d4c41);
+			PS.color(x - 1, GROUND_LEVEL - 3, COLOR_SKY);
+			PS.color(x - 1, GROUND_LEVEL - 7, COLOR_SKY);
+		}
+		if (x - 2 > 0) {
+			PS.color(x - 2, GROUND_LEVEL - 2, 0x706510);
+			PS.color(x - 2, GROUND_LEVEL - 6, 0x827717);
+			PS.color(x - 2, GROUND_LEVEL - 11, 0xc2850b);
+			PS.color(x - 2, GROUND_LEVEL - 10, 0xa3710c);
+			PS.color(x - 2, GROUND_LEVEL - 12, 0xd99709);
+			PS.color(x - 2, GROUND_LEVEL - 3, COLOR_SKY);
+			PS.color(x - 2, GROUND_LEVEL - 4, COLOR_SKY);
+			PS.color(x - 2, GROUND_LEVEL - 7, COLOR_SKY);
+			PS.color(x - 2, GROUND_LEVEL - 8, COLOR_SKY);
+		}
+		if (x + 1 < GRID_WIDTH) {
+			PS.color(x + 1, GROUND_LEVEL - 3, 0x706510);
+			PS.color(x + 1, GROUND_LEVEL - 4, 0x827717);
+			PS.color(x + 1, GROUND_LEVEL - 9, 0xa3710c);
+			PS.color(x + 1, GROUND_LEVEL - 10, 0xa3710c);
+			PS.color(x + 1, GROUND_LEVEL - 12, 0xa3710c);
+			PS.color(x + 1, GROUND_LEVEL - 13, 0xd99709);
+			PS.color(x + 1, GROUND_LEVEL - 11, 0x6d4c41);
+			PS.color(x + 1, GROUND_LEVEL - 5, COLOR_SKY);
+		}
+		if (x + 2 < GRID_WIDTH) {
+			PS.color(x + 2, GROUND_LEVEL - 4, 0x706510);
+			PS.color(x + 2, GROUND_LEVEL - 10, 0xa3710c);
+			PS.color(x + 2, GROUND_LEVEL - 11, 0xd99709);
+			PS.color(x + 2, GROUND_LEVEL - 12, 0xd99709);
+			PS.color(x + 2, GROUND_LEVEL - 5, COLOR_SKY);
+			PS.color(x + 2, GROUND_LEVEL - 6, COLOR_SKY);
+		}
+		PS.timerStop(deadFlowerTimer);
+	}
+
+	var rip = function() { 
+		PS.timerStop(ripTimer);
+		PS.color(x, GROUND_LEVEL, COLOR_SKY);
+		PS.color(x, GROUND_LEVEL - 1, COLOR_SKY);
+		PS.color(x, GROUND_LEVEL - 8, COLOR_SKY);
+		PS.color(x, GROUND_LEVEL - 2, COLOR_SKY);
+		PS.color(x, GROUND_LEVEL - 3, COLOR_SKY);
+		PS.color(x, GROUND_LEVEL - 4, COLOR_SKY);
+		PS.color(x, GROUND_LEVEL - 5, COLOR_SKY);
+		PS.color(x, GROUND_LEVEL - 6, COLOR_SKY);
+		PS.color(x, GROUND_LEVEL - 7, COLOR_SKY);
+		PS.color(x, GROUND_LEVEL - 9, COLOR_SKY);
+		PS.color(x, GROUND_LEVEL - 13, COLOR_SKY);
+		PS.color(x, GROUND_LEVEL - 10, COLOR_SKY);
+		PS.color(x, GROUND_LEVEL - 12, COLOR_SKY);
+		PS.color(x, GROUND_LEVEL - 11, COLOR_SKY);
+		if (x - 1 > 0) {
+			PS.color(x - 1, GROUND_LEVEL - 1, COLOR_SKY);
+			PS.color(x - 1, GROUND_LEVEL - 6, COLOR_SKY);
+			PS.color(x - 1, GROUND_LEVEL - 2, COLOR_SKY);
+			PS.color(x - 1, GROUND_LEVEL - 10, COLOR_SKY);
+			PS.color(x - 1, GROUND_LEVEL - 9, COLOR_SKY);
+			PS.color(x - 1, GROUND_LEVEL - 12, COLOR_SKY);
+			PS.color(x - 1, GROUND_LEVEL - 13, COLOR_SKY);
+			PS.color(x - 1, GROUND_LEVEL - 11, COLOR_SKY);
+		}
+		if (x - 2 > 0) {
+			PS.color(x - 2, GROUND_LEVEL - 2, COLOR_SKY);
+			PS.color(x - 2, GROUND_LEVEL - 6, COLOR_SKY);
+			PS.color(x - 2, GROUND_LEVEL - 11, COLOR_SKY);
+			PS.color(x - 2, GROUND_LEVEL - 10, COLOR_SKY);
+			PS.color(x - 2, GROUND_LEVEL - 12, COLOR_SKY);
+		}
+		if (x + 1 < GRID_WIDTH) {
+			PS.color(x + 1, GROUND_LEVEL - 3, COLOR_SKY);
+			PS.color(x + 1, GROUND_LEVEL - 4, COLOR_SKY);
+			PS.color(x + 1, GROUND_LEVEL - 9, COLOR_SKY);
+			PS.color(x + 1, GROUND_LEVEL - 10, COLOR_SKY);
+			PS.color(x + 1, GROUND_LEVEL - 12, COLOR_SKY);
+			PS.color(x + 1, GROUND_LEVEL - 13, COLOR_SKY);
+			PS.color(x + 1, GROUND_LEVEL - 11, COLOR_SKY);
+		}
+		if (x + 2 < GRID_WIDTH) {
+			PS.color(x + 2, GROUND_LEVEL - 4, COLOR_SKY);
+			PS.color(x + 2, GROUND_LEVEL - 10, COLOR_SKY);
+			PS.color(x + 2, GROUND_LEVEL - 11, COLOR_SKY);
+			PS.color(x + 2, GROUND_LEVEL - 12, COLOR_SKY);
+		}
+		for (var i = 0; i < seed_Tracker.length; i++) {
+			if (x == seed_Tracker[i][0]) {
+				seed_Tracker.splice(i, 1);
+			}
+		}
+	}
+
+	rootTimer = PS.timerStart(6, root);
+	smolTimer = PS.timerStart(60, smol);
+	saplingTimer = PS.timerStart(120, sapling);
+	budTimer = PS.timerStart(180, bud);
+	fullFlowerTimer = PS.timerStart(240, fullFlower);
+	deadFlowerTimer = PS.timerStart(360, deadFlower);
+	ripTimer = PS.timerStart(420, rip);
+}
+
+var growTulip = function(x) {
+	var rootTimer;
+	var smolTimer;
+	var saplingTimer;
+	var budTimer;
+	var fullFlowerTimer;
+	var deadFlowerTimer;
+	var ripTimer;
+
+	var root = function() {
+		PS.color(x, GROUND_LEVEL, 0x1b5e1f);
+	}
+
+	var smol = function() {
+		PS.color(x, GROUND_LEVEL, 0x1b5e1f);
+		PS.color(x, GROUND_LEVEL - 1, 0x43a048);
+		if (x - 1 > 0) PS.color(x - 1, GROUND_LEVEL - 2, 0x43a048);
+		PS.timerStop(smolTimer);
+	}
+	
+	var sapling = function() {
+		PS.color(x, GROUND_LEVEL - 2, 0x43a048);
+		PS.color(x, GROUND_LEVEL - 3, 0x4caf4f);
+		PS.color(x, GROUND_LEVEL - 4, 0x66bb6a);
+		if (x - 1 > 0) PS.color(x - 1, GROUND_LEVEL - 1, 0x2e7d32);
+		if (x - 2 > 0) {
+			PS.color(x - 2, GROUND_LEVEL - 2, 0x388e3d);
+			PS.color(x - 2, GROUND_LEVEL - 3, 0x43a048);
+		}
+		if (x + 1 < GRID_WIDTH) {
+			PS.color(x + 1, GROUND_LEVEL - 3, 0x4caf4f);
+			PS.color(x + 1, GROUND_LEVEL - 1, 0x2e7d32);
+			PS.color(x + 1, GROUND_LEVEL - 2, 0x388e3d);
+		}
+		if (x + 2 < GRID_WIDTH) {
+			PS.color(x + 2, GROUND_LEVEL - 2, 0x2e7d32);
+			PS.color(x + 2, GROUND_LEVEL - 3, 0x2e7d32);
+			PS.color(x + 2, GROUND_LEVEL - 4, 0x4caf4f);
+		}
+		PS.timerStop(saplingTimer);
+	}
+
+	var bud = function() {
+		PS.color(x, GROUND_LEVEL - 5, 0x2e7d32);
+		PS.color(x, GROUND_LEVEL - 6, 0x7b1fa2);
+		PS.color(x, GROUND_LEVEL - 7, 0xaa47bc);
+		PS.color(x, GROUND_LEVEL - 8, 0xba68c8);
+		if (x - 1 > 0) {
+			PS.color(x - 1, GROUND_LEVEL - 6, 0x7b1fa2);
+			PS.color(x - 1, GROUND_LEVEL - 7, 0xaa47bc);
+		}
+		if (x - 2 > 0) {
+			PS.color(x - 2, GROUND_LEVEL - 4, 0x66bb6a);
+		}
+		if (x + 1 < GRID_WIDTH) {
+			PS.color(x + 1, GROUND_LEVEL - 6, 0x7b1fa2);
+			PS.color(x + 1, GROUND_LEVEL - 7, 0xaa47bc);
+		}
+		if (x + 2 < GRID_WIDTH) {
+			PS.color(x + 2, GROUND_LEVEL - 5, 0x66bb6a);
+		}
+		PS.timerStop(budTimer);
+	}
+
+	var fullFlower = function() { 
+		if (x - 1 > 0) {
+			PS.color(x - 1, GROUND_LEVEL - 6, COLOR_SKY);
+			PS.color(x - 1, GROUND_LEVEL - 7, 0x7b1fa2);
+			PS.color(x - 1, GROUND_LEVEL - 8, 0xaa47bc);
+			PS.color(x - 1, GROUND_LEVEL - 9, 0xba68c8);
+		}
+		if (x - 2 > 0) {
+		}
+		if (x + 1 < GRID_WIDTH) {
+			PS.color(x + 1, GROUND_LEVEL - 6, COLOR_SKY);
+			PS.color(x + 1, GROUND_LEVEL - 7, 0x7b1fa2);
+			PS.color(x + 1, GROUND_LEVEL - 8, 0xaa47bc);
+			PS.color(x + 1, GROUND_LEVEL - 9, 0xba68c8);
+		}
+		if (x + 2 < GRID_WIDTH) {
+		}
+		PS.timerStop(fullFlowerTimer);
+	}
+
+	var deadFlower = function() {
+		PS.timerStop(rootTimer);
+		PS.color(x, GROUND_LEVEL, 0x827717);
+		PS.color(x, GROUND_LEVEL - 1, 0x9e9e24);
+		PS.color(x, GROUND_LEVEL - 2, 0xc0ca33);
+		PS.color(x, GROUND_LEVEL - 3, 0xc0ca33);
+		PS.color(x, GROUND_LEVEL - 4, 0xc0ca33);
+		PS.color(x, GROUND_LEVEL - 5, 0x9e9e24);
+		PS.color(x, GROUND_LEVEL - 6, 0x5e35b1);
+		PS.color(x, GROUND_LEVEL - 7, 0x7e57c2);
+		PS.color(x, GROUND_LEVEL - 8, 0x9675cd);
+		if (x - 1 > 0) {
+			PS.color(x - 1, GROUND_LEVEL - 1, 0x9e9e24);
+			PS.color(x - 1, GROUND_LEVEL - 2, 0xccdc39);
+			PS.color(x - 1, GROUND_LEVEL - 6, 0x5e35b1);
+			PS.color(x - 1, GROUND_LEVEL - 7, 0x7e57c2);
+			PS.color(x - 1, GROUND_LEVEL - 8, COLOR_SKY);
+			PS.color(x - 1, GROUND_LEVEL - 9, COLOR_SKY);
+		}
+		if (x - 2 > 0) {
+			PS.color(x - 2, GROUND_LEVEL - 2, 0x9e9e24);
+			PS.color(x - 2, GROUND_LEVEL - 3, 0xccdc39);
+			PS.color(x - 2, GROUND_LEVEL - 4, COLOR_SKY);
+		}
+		if (x + 1 < GRID_WIDTH) {
+			PS.color(x + 1, GROUND_LEVEL - 1, 0x827717);
+			PS.color(x + 1, GROUND_LEVEL - 2, 0x9e9e24);
+			PS.color(x + 1, GROUND_LEVEL - 3, 0xccdc39);
+			PS.color(x + 1, GROUND_LEVEL - 6, 0x7e57c2);
+			PS.color(x + 1, GROUND_LEVEL - 7, 0x9675cd);
+			PS.color(x + 1, GROUND_LEVEL - 8, COLOR_SKY);
+			PS.color(x + 1, GROUND_LEVEL - 9, COLOR_SKY);
+		}
+		if (x + 2 < GRID_WIDTH) {
+			PS.color(x + 2, GROUND_LEVEL - 2, 0x827717);
+			PS.color(x + 2, GROUND_LEVEL - 3, 0x827717);
+			PS.color(x + 2, GROUND_LEVEL - 4, 0xc0ca33);
+			PS.color(x + 2, GROUND_LEVEL - 5, COLOR_SKY);
+		}
+		PS.timerStop(deadFlowerTimer);
+	}
+
+	var rip = function() { 
+		PS.color(x, GROUND_LEVEL, COLOR_SKY);
+		PS.color(x, GROUND_LEVEL - 1, COLOR_SKY);
+		PS.color(x, GROUND_LEVEL - 2, COLOR_SKY);
+		PS.color(x, GROUND_LEVEL - 3, COLOR_SKY);
+		PS.color(x, GROUND_LEVEL - 4, COLOR_SKY);
+		PS.color(x, GROUND_LEVEL - 5, COLOR_SKY);
+		PS.color(x, GROUND_LEVEL - 6, COLOR_SKY);
+		PS.color(x, GROUND_LEVEL - 7, COLOR_SKY);
+		PS.color(x, GROUND_LEVEL - 8, COLOR_SKY);
+		if (x - 1 > 0) {
+			PS.color(x - 1, GROUND_LEVEL - 1, COLOR_SKY);
+			PS.color(x - 1, GROUND_LEVEL - 2, COLOR_SKY);
+			PS.color(x - 1, GROUND_LEVEL - 6, COLOR_SKY);
+			PS.color(x - 1, GROUND_LEVEL - 7, COLOR_SKY);
+		}
+		if (x - 2 > 0) {
+			PS.color(x - 2, GROUND_LEVEL - 2, COLOR_SKY);
+			PS.color(x - 2, GROUND_LEVEL - 3, COLOR_SKY);
+		}
+		if (x + 1 < GRID_WIDTH) {
+			PS.color(x + 1, GROUND_LEVEL - 1, COLOR_SKY);
+			PS.color(x + 1, GROUND_LEVEL - 2, COLOR_SKY);
+			PS.color(x + 1, GROUND_LEVEL - 3, COLOR_SKY);
+			PS.color(x + 1, GROUND_LEVEL - 6, COLOR_SKY);
+			PS.color(x + 1, GROUND_LEVEL - 7, COLOR_SKY);
+		}
+		if (x + 2 < GRID_WIDTH) {
+			PS.color(x + 2, GROUND_LEVEL - 2, COLOR_SKY);
+			PS.color(x + 2, GROUND_LEVEL - 3, COLOR_SKY);
+			PS.color(x + 2, GROUND_LEVEL - 4, COLOR_SKY);
+		}
+		PS.timerStop(ripTimer);
+		for (var i = 0; i < seed_Tracker.length; i++) {
+			if (x == seed_Tracker[i][0]) {
+				seed_Tracker.splice(i, 1);
+			}
+		}
+	}
+
+	rootTimer = PS.timerStart(6, root);
+	smolTimer = PS.timerStart(60, smol);
+	saplingTimer = PS.timerStart(120, sapling);
+	budTimer = PS.timerStart(180, bud);
+	fullFlowerTimer = PS.timerStart(240, fullFlower);
+	deadFlowerTimer = PS.timerStart(360, deadFlower);
+	ripTimer = PS.timerStart(420, rip);
 }
 
 var growRose = function(x) {
@@ -233,11 +629,13 @@ PS.init = function( system, options ) {
 
 	PS.dbLogin( "imgd2900", TEAM, function ( id, user ) {
 		if ( user === PS.ERROR ) {
-			return PS.dbErase( TEAM );
+			//return PS.dbErase( TEAM );
+			return;
 		}
 		PS.dbEvent( TEAM, "startup", user );
-		PS.dbSave( TEAM, PS.CURRENT, { discard : true } );
-	}, { active : false } );
+		//PS.dbSave( TEAM, PS.CURRENT, { discard : true } );
+		PS.dbSend( TEAM, PS.CURRENT, { discard : true } );
+	}, { active : true } );
 };
 
 /*
