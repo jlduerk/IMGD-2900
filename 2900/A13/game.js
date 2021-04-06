@@ -276,13 +276,21 @@ var growSunflower = function(x) {
 		}
 	}
 
-	rootTimer = PS.timerStart(6, root);
-	smolTimer = PS.timerStart(60, smol);
-	saplingTimer = PS.timerStart(120, sapling);
-	budTimer = PS.timerStart(180, bud);
-	fullFlowerTimer = PS.timerStart(240, fullFlower);
-	deadFlowerTimer = PS.timerStart(370, deadFlower);
-	ripTimer = PS.timerStart(430, rip);
+	var rootTicks = 6;
+	var smolTicks = Math.floor((Math.random()*70) + 20);
+	var saplingTicks = Math.floor((Math.random()*70) + 70);
+	var budTicks = Math.floor((Math.random()*70) + 130);
+	var fullFlowerTicks = Math.floor((Math.random()*70) + 190);
+	var deadFlowerTicks = Math.floor((Math.random()*70) + 330);
+	var ripTicks = Math.floor((Math.random()*70) + 380);
+
+	rootTimer = PS.timerStart(rootTicks, root);
+	smolTimer = PS.timerStart(rootTicks + smolTicks, smol);
+	saplingTimer = PS.timerStart(smolTicks + saplingTicks, sapling);
+	budTimer = PS.timerStart(saplingTicks + budTicks, bud);
+	fullFlowerTimer = PS.timerStart(budTicks + fullFlowerTicks, fullFlower);
+	deadFlowerTimer = PS.timerStart(fullFlowerTicks + deadFlowerTicks, deadFlower);
+	ripTimer = PS.timerStart(deadFlowerTicks + ripTicks, rip);
 }
 
 var growTulip = function(x) {
@@ -450,14 +458,21 @@ var growTulip = function(x) {
 			}
 		}
 	}
+	var rootTicks = 6;
+	var smolTicks = Math.floor((Math.random()*70) + 20);
+	var saplingTicks = Math.floor((Math.random()*70) + 70);
+	var budTicks = Math.floor((Math.random()*70) + 130);
+	var fullFlowerTicks = Math.floor((Math.random()*70) + 190);
+	var deadFlowerTicks = Math.floor((Math.random()*70) + 330);
+	var ripTicks = Math.floor((Math.random()*70) + 380);
 
-	rootTimer = PS.timerStart(6, root);
-	smolTimer = PS.timerStart(60, smol);
-	saplingTimer = PS.timerStart(120, sapling);
-	budTimer = PS.timerStart(180, bud);
-	fullFlowerTimer = PS.timerStart(240, fullFlower);
-	deadFlowerTimer = PS.timerStart(370, deadFlower);
-	ripTimer = PS.timerStart(430, rip);
+	rootTimer = PS.timerStart(rootTicks, root);
+	smolTimer = PS.timerStart(rootTicks + smolTicks, smol);
+	saplingTimer = PS.timerStart(smolTicks + saplingTicks, sapling);
+	budTimer = PS.timerStart(saplingTicks + budTicks, bud);
+	fullFlowerTimer = PS.timerStart(budTicks + fullFlowerTicks, fullFlower);
+	deadFlowerTimer = PS.timerStart(fullFlowerTicks + deadFlowerTicks, deadFlower);
+	ripTimer = PS.timerStart(deadFlowerTicks + ripTicks, rip);
 }
 
 var growRose = function(x) {
@@ -563,13 +578,21 @@ var growRose = function(x) {
 		}
 	}
 
-	rootTimer = PS.timerStart(6, root);
-	smolTimer = PS.timerStart(60, smol);
-	saplingTimer = PS.timerStart(120, sapling);
-	budTimer = PS.timerStart(180, bud);
-	fullFlowerTimer = PS.timerStart(240, fullFlower);
-	deadFlowerTimer = PS.timerStart(370, deadFlower);
-	ripTimer = PS.timerStart(430, rip);
+	var rootTicks = 6;
+	var smolTicks = Math.floor((Math.random()*70) + 20);
+	var saplingTicks = Math.floor((Math.random()*70) + 70);
+	var budTicks = Math.floor((Math.random()*70) + 130);
+	var fullFlowerTicks = Math.floor((Math.random()*70) + 190);
+	var deadFlowerTicks = Math.floor((Math.random()*70) + 330);
+	var ripTicks = Math.floor((Math.random()*70) + 380);
+
+	rootTimer = PS.timerStart(rootTicks, root);
+	smolTimer = PS.timerStart(rootTicks + smolTicks, smol);
+	saplingTimer = PS.timerStart(smolTicks + saplingTicks, sapling);
+	budTimer = PS.timerStart(saplingTicks + budTicks, bud);
+	fullFlowerTimer = PS.timerStart(budTicks + fullFlowerTicks, fullFlower);
+	deadFlowerTimer = PS.timerStart(fullFlowerTicks + deadFlowerTicks, deadFlower);
+	ripTimer = PS.timerStart(deadFlowerTicks + ripTicks, rip);
 
 }
 
