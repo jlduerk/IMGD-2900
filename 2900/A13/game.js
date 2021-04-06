@@ -277,12 +277,12 @@ var growSunflower = function(x) {
 	}
 
 	var rootTicks = 6;
-	var smolTicks = Math.floor((Math.random()*70) + 20);
-	var saplingTicks = Math.floor((Math.random()*70) + 70);
-	var budTicks = Math.floor((Math.random()*70) + 130);
-	var fullFlowerTicks = Math.floor((Math.random()*70) + 190);
-	var deadFlowerTicks = Math.floor((Math.random()*70) + 330);
-	var ripTicks = Math.floor((Math.random()*70) + 380);
+	var smolTicks = Math.floor((Math.random()*100) + 20);
+	var saplingTicks = Math.floor((Math.random()*100) + 70);
+	var budTicks = Math.floor((Math.random()*100) + 130);
+	var fullFlowerTicks = Math.floor((Math.random()*100) + 190);
+	var deadFlowerTicks = Math.floor((Math.random()*100) + 330);
+	var ripTicks = Math.floor((Math.random()*100) + 380);
 
 	rootTimer = PS.timerStart(rootTicks, root);
 	smolTimer = PS.timerStart(rootTicks + smolTicks, smol);
@@ -458,13 +458,14 @@ var growTulip = function(x) {
 			}
 		}
 	}
+
 	var rootTicks = 6;
-	var smolTicks = Math.floor((Math.random()*70) + 20);
-	var saplingTicks = Math.floor((Math.random()*70) + 70);
-	var budTicks = Math.floor((Math.random()*70) + 130);
-	var fullFlowerTicks = Math.floor((Math.random()*70) + 190);
-	var deadFlowerTicks = Math.floor((Math.random()*70) + 330);
-	var ripTicks = Math.floor((Math.random()*70) + 380);
+	var smolTicks = Math.floor((Math.random()*100) + 20);
+	var saplingTicks = Math.floor((Math.random()*100) + 70);
+	var budTicks = Math.floor((Math.random()*100) + 130);
+	var fullFlowerTicks = Math.floor((Math.random()*100) + 190);
+	var deadFlowerTicks = Math.floor((Math.random()*100) + 330);
+	var ripTicks = Math.floor((Math.random()*100) + 380);
 
 	rootTimer = PS.timerStart(rootTicks, root);
 	smolTimer = PS.timerStart(rootTicks + smolTicks, smol);
@@ -579,12 +580,12 @@ var growRose = function(x) {
 	}
 
 	var rootTicks = 6;
-	var smolTicks = Math.floor((Math.random()*70) + 20);
-	var saplingTicks = Math.floor((Math.random()*70) + 70);
-	var budTicks = Math.floor((Math.random()*70) + 130);
-	var fullFlowerTicks = Math.floor((Math.random()*70) + 190);
-	var deadFlowerTicks = Math.floor((Math.random()*70) + 330);
-	var ripTicks = Math.floor((Math.random()*70) + 380);
+	var smolTicks = Math.floor((Math.random()*100) + 20);
+	var saplingTicks = Math.floor((Math.random()*100) + 70);
+	var budTicks = Math.floor((Math.random()*100) + 130);
+	var fullFlowerTicks = Math.floor((Math.random()*100) + 190);
+	var deadFlowerTicks = Math.floor((Math.random()*100) + 330);
+	var ripTicks = Math.floor((Math.random()*100) + 380);
 
 	rootTimer = PS.timerStart(rootTicks, root);
 	smolTimer = PS.timerStart(rootTicks + smolTicks, smol);
