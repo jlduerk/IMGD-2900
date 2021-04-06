@@ -664,7 +664,7 @@ PS.init = function( system, options ) {
 	PS.color(29, 19, COLOR_GROUND_2);
 	PS.color(30, 18, COLOR_GROUND_2);
 	PS.statusText("Flower Garden");
-	PS.statusColor(0x4814A6);
+	PS.statusColor(0x064F0A);
 
 	PS.timerStart(SPEED, animate);
 	// PS.dbLogin() must be called at the END
