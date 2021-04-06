@@ -26,7 +26,8 @@ var GRID_WIDTH = 32;
 var GRID_HEIGHT = 20;
 var GROUND_LEVEL = 16;
 var COLOR_SKY = 0x6A98D2;
-var COLOR_GROUND = 0x5CD236;
+var COLOR_GROUND_1 = 0x36B02C;
+var COLOR_GROUND_2 = 0x0A873F;
 var COLOR_SEED = 0xD29A3E;
 var SPEED = 6; // 10 fps
 var DROP_SOUND = "xylo_d5";
@@ -646,9 +647,22 @@ PS.init = function( system, options ) {
 	PS.gridColor(0x6A98D2);
 	PS.border(PS.ALL, PS.ALL, 0);
 	PS.color(PS.ALL, PS.ALL, COLOR_SKY);
-	PS.color(PS.ALL, 19, COLOR_GROUND);
-	PS.color(PS.ALL, 18, COLOR_GROUND);
-	PS.color(PS.ALL, 17, COLOR_GROUND);
+	PS.color(PS.ALL, 19, COLOR_GROUND_1);
+	PS.color(PS.ALL, 18, COLOR_GROUND_1);
+	PS.color(PS.ALL, 17, COLOR_GROUND_1);
+	PS.color(0, 18, COLOR_GROUND_2);
+	PS.color(4, 18, COLOR_GROUND_2);
+	PS.color(5, 17, COLOR_GROUND_2);
+	PS.color(9, 19, COLOR_GROUND_2);
+	PS.color(10, 18, COLOR_GROUND_2);
+	PS.color(14, 18, COLOR_GROUND_2);
+	PS.color(15, 17, COLOR_GROUND_2);
+	PS.color(19, 19, COLOR_GROUND_2);
+	PS.color(20, 18, COLOR_GROUND_2);
+	PS.color(24, 18, COLOR_GROUND_2);
+	PS.color(25, 17, COLOR_GROUND_2);
+	PS.color(29, 19, COLOR_GROUND_2);
+	PS.color(30, 18, COLOR_GROUND_2);
 	PS.statusText("Flower Garden");
 	PS.statusColor(0x4814A6);
 
