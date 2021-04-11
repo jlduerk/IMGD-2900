@@ -22,6 +22,18 @@ Any value returned is ignored.
 [options : Object] = A JavaScript object with optional data properties; see API documentation for details.
 */
 
+var COLOR_1 = 0x66D8FF;
+var COLOR_2 = 0x38FF57;
+var COLOR_3 = 0xFF8145;
+var COLOR_4 = 0xFF4FF5;
+
+
+animateCircles = function (){
+	var 
+
+
+}
+
 PS.init = function( system, options ) {
 	// Change this string to your team name
 	// Use only ALPHABETIC characters
@@ -32,10 +44,30 @@ PS.init = function( system, options ) {
 	// Begin with essential setup
 	// Establish initial grid size
 
-	PS.gridSize( 8, 8 ); // or whatever size you want
+	PS.gridSize( 9, 11); // or whatever size you want
 
 	// Install additional initialization code
 	// here as needed
+
+	PS.color(4, 4, 0x000000);
+	PS.color(1, 10, COLOR_1);
+	PS.color(3, 10, COLOR_2);
+	PS.color(5, 10, COLOR_3);
+	PS.color(7, 10, COLOR_4);
+	PS.color(PS.ALL, 9, 0x000000);
+
+	PS.radius(PS.ALL, PS.ALL, 50);
+	PS.radius(PS.ALL, 9, 0);
+	PS.scale(PS.ALL, 9, 50);
+	PS.border(PS.ALL, PS.ALL, 0);
+
+/*	Spawn Locations
+
+	PS.color(0, 1, COLOR_1);
+	PS.color(0, 8, COLOR_2);
+	PS.color(8, 1, COLOR_3);
+	PS.color(8, 8, COLOR_4);
+*/
 
 	// PS.dbLogin() must be called at the END
 	// of the PS.init() event handler (as shown)
