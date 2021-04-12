@@ -27,7 +27,7 @@ var COLOR_2 = 0x38FF57;
 var COLOR_3 = 0xFF8145;
 var COLOR_4 = 0xFF4FF5;
 var BLACK = 0x000000;
-var SPEED = 30;
+var SPEED = 15;
 var circlesPos = [];
 var CENTER_POS_X = 4;
 var CENTER_POS_Y = 4;
@@ -48,10 +48,17 @@ let sprite_bry = 9;
 
 var ballTimer;
 var ballCounter = 0;
+var totalBallsPerLevel = 0;
+var currentLevel = 1;
+var ballSequence = []; //blue = 0, green = 1, orange = 2, magenta = 3
+let levelSuccess = true;
+var selectBalls = false;
+var selectCounter = 0;
 
 
 var randomizeCircles = function () {
 	var randBall = Math.floor(Math.random()*4);
+	ballSequence.push(randBall);
 	if (randBall == 0){
 	//	playTopLeft();
 		ballTimer = PS.timerStart(SPEED, playTopLeft);
@@ -67,8 +74,6 @@ var randomizeCircles = function () {
 	}
 
 }
-
-
 
 
 var moveTL = function (h, v){
@@ -96,7 +101,6 @@ var moveBR = function (h, v){
 }
 
 
-
 var playTopLeft = function () {
 	PS.spriteShow(topLeft, 1);
 	sprite_id = topLeft;
@@ -104,17 +108,18 @@ var playTopLeft = function () {
 		moveTL(1, 1);
 	} else {
 		PS.spriteMove(topLeft, 0, 0);
-	//	PS.spriteShow(topLeft, 0);
+		PS.spriteShow(topLeft, 0);
 		ballCounter +=1;
 		PS.timerStop(ballTimer);
 		sprite_tlx = -1;
 		sprite_tly = -1;
-		if (ballCounter < 10) {
+		if (ballCounter < totalBallsPerLevel) {
 			randomizeCircles();
+		} else { //done spawning balls 
+			selectBallsTime();
 		}
 	}
 }
-
 
 var playTopRight = function (){
 	PS.spriteShow(topRight, 1);
@@ -123,17 +128,18 @@ var playTopRight = function (){
 		moveTR(-1, 1);
 	} else {
 		PS.spriteMove(topRight, 8, 0);
-	//	PS.spriteShow(topRight, 0);
+		PS.spriteShow(topRight, 0);
 		ballCounter +=1;
 		PS.timerStop(ballTimer);
 		sprite_trx = 9;
 		sprite_try = -1;
-		if (ballCounter < 10) {
+		if (ballCounter < totalBallsPerLevel) {
 			randomizeCircles();
+		} else { //done spawning balls 
+			selectBallsTime();
 		}
 	}
 }
-
 
 var playBottomLeft = function (){
 	PS.spriteShow(bottomLeft, 1);
@@ -142,17 +148,18 @@ var playBottomLeft = function (){
 		moveBL(1, -1);
 	} else {
 		PS.spriteMove(bottomLeft, 0, 8);
-	//	PS.spriteShow(bottomLeft, 0);
+		PS.spriteShow(bottomLeft, 0);
 		ballCounter +=1;
 		PS.timerStop(ballTimer);
 		sprite_blx = -1;
 		sprite_bly = 9;
-		if (ballCounter < 10) {
+		if (ballCounter < totalBallsPerLevel) {
 			randomizeCircles();
+		} else { //done spawning balls 
+			selectBallsTime();
 		}
 	}
 }
-
 
 var playBottomRight = function (){
 	PS.spriteShow(bottomRight, 1);
@@ -161,18 +168,70 @@ var playBottomRight = function (){
 		moveBR(-1, -1);
 	} else {
 		PS.spriteMove(bottomRight, 8, 8);
-	//	PS.spriteShow(bottomRight, 0);
+		PS.spriteShow(bottomRight, 0);
 		ballCounter +=1;
 		PS.timerStop(ballTimer);
 		sprite_brx = 9;
 		sprite_bry = 9;
-		if (ballCounter < 10) {
+		if (ballCounter < totalBallsPerLevel) {
 			randomizeCircles();
+		} else { //done spawning balls 
+			selectBallsTime();
 		}
 	}
 }
 
+var selectBallsTime = function() {
+	selectBalls = true;
+	PS.alpha(1, 10, 255);
+	PS.alpha(3, 10, 255);
+	PS.alpha(5, 10, 255);
+	PS.alpha(7, 10, 255);
+}
 
+var levelComplete = function() {
+	var displayTimer;
+	var timerTicks = 60;
+	var startNextLevel = function () {
+		initLevel();
+		PS.timerStop(displayTimer);
+	}
+	if (levelSuccess == true) { //IF YOU BEAT THE LEVEL
+		PS.statusText("Level Complete!");
+	} else { //IF YOU FAILED THE LEVEL
+		timerTicks = 180;
+		PS.statusText("GAME OVER!");
+	}
+	
+	displayTimer = PS.timerStart(timerTicks, startNextLevel);
+
+}
+
+var initLevel = function(){
+	PS.alpha(1, 10, 100);
+	PS.alpha(3, 10, 100);
+	PS.alpha(5, 10, 100);
+	PS.alpha(7, 10, 100);
+
+	PS.statusText("Level " + currentLevel);
+	if (currentLevel < 5) {
+		totalBallsPerLevel += 1;
+		SPEED += 1;
+	}
+	selectBalls = false;
+	selectCounter = 0;
+	ballCounter = 0;
+	ballSequence = [];
+	if (levelSuccess == true) {
+		randomizeCircles();
+	} else {
+		//if u fail a level for now we just go back to beginning hahaha
+		currentLevel = 1;
+		totalBallsPerLevel = 0;
+		levelSuccess = true;
+		initLevel();
+	}
+}
 
 PS.init = function( system, options ) {
 	// Change this string to your team name
@@ -229,11 +288,9 @@ PS.init = function( system, options ) {
 	PS.radius(PS.ALL, PS.ALL, 50);
 	PS.radius(PS.ALL, 9, 0);
 	PS.scale(PS.ALL, 9, 50);
-//	PS.border(PS.ALL, PS.ALL, 0);
+	PS.border(PS.ALL, PS.ALL, 0);
 
-
-	randomizeCircles();
-	PS.debug(ballTimer);
+	initLevel();
 	// PS.dbLogin() must be called at the END
 	// of the PS.init() event handler (as shown)
 	// DO NOT MODIFY THIS FUNCTION CALL
@@ -248,6 +305,7 @@ PS.init = function( system, options ) {
 	}, { active : false } );
 };
 
+
 /*
 PS.touch ( x, y, data, options )
 Called when the left mouse button is clicked over bead(x, y), or when bead(x, y) is touched.
@@ -257,12 +315,77 @@ This function doesn't have to do anything. Any value returned is ignored.
 [data : *] = The JavaScript value previously associated with bead(x, y) using PS.data(); default = 0.
 [options : Object] = A JavaScript object with optional data properties; see API documentation for details.
 */
-
+const onClickAlpha = 200;
 PS.touch = function( x, y, data, options ) {
-	// Uncomment the following code line
-	// to inspect x/y parameters:
-
-	// PS.debug( "PS.touch() @ " + x + ", " + y + "\n" );
+	//PS.color(1, 10, COLOR_1);
+	//PS.color(3, 10, COLOR_2);
+	//PS.color(5, 10, COLOR_3);
+	//PS.color(7, 10, COLOR_4);
+	//selectCounter = 0;
+	//blue = 0, green = 1, orange = 2, magenta = 3
+	//PS.debug("selectBalls: " + selectBalls + "\n");
+	//PS.debug(ballSequence[selectCounter]);
+	//PS.debug("x:"+x+" y:"+y+"\n");
+	if (selectBalls == true) {
+		if (x == 1 && y == 10) { //COLOR_1
+			PS.alpha(x,y, onClickAlpha);
+			if (ballSequence[selectCounter] == 0) {
+				//PS.debug("correct selection");
+				selectCounter += 1;
+				if (selectCounter == ballSequence.length) {
+					levelSuccess = true;
+					currentLevel += 1;
+					levelComplete();
+				}
+			} else { //the player messed up
+				levelSuccess = false;
+				levelComplete();
+			}
+		} else if (x == 3 && y == 10) { //COLOR_2
+			PS.alpha(x,y, onClickAlpha);
+			if (ballSequence[selectCounter] == 1) {
+				//PS.debug("correct selection");
+				selectCounter += 1;
+				if (selectCounter == ballSequence.length) {
+					levelSuccess = true;
+					currentLevel += 1;
+					levelComplete();
+				}
+			} else { //the player messed up
+				levelSuccess = false;
+				levelComplete();
+			}
+			
+		} else if (x == 5 && y == 10) { //COLOR_3
+			PS.alpha(x,y, onClickAlpha);
+			if (ballSequence[selectCounter] == 2) {
+				//PS.debug("correct selection");
+				selectCounter += 1;
+				if (selectCounter == ballSequence.length) {
+					levelSuccess = true;
+					currentLevel += 1;
+					levelComplete();
+				}
+			} else { //the player messed up
+				levelSuccess = false;
+				levelComplete();
+			}
+		} else if (x == 7 && y == 10) { //COLOR_4
+			PS.alpha(x,y, onClickAlpha);
+			if (ballSequence[selectCounter] == 3) {
+				//PS.debug("correct selection");
+				selectCounter += 1;
+				if (selectCounter == ballSequence.length) {
+					levelSuccess = true;
+					currentLevel += 1;
+					levelComplete();
+				}
+			} else { //the player messed up
+				levelSuccess = false;
+				levelComplete();
+			}
+		}
+	}
 
 	// Add code here for mouse clicks/touches
 	// over a bead.
@@ -282,6 +405,7 @@ PS.release = function( x, y, data, options ) {
 	// Uncomment the following code line to inspect x/y parameters:
 
 	// PS.debug( "PS.release() @ " + x + ", " + y + "\n" );
+	PS.alpha(x,y, 255);
 
 	// Add code here for when the mouse button/touch is released over a bead.
 };
