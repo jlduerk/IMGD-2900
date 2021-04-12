@@ -107,6 +107,8 @@ var playTopLeft = function () {
 	//	PS.spriteShow(topLeft, 0);
 		ballCounter +=1;
 		PS.timerStop(ballTimer);
+		sprite_tlx = -1;
+		sprite_tly = -1;
 		if (ballCounter < 10) {
 			randomizeCircles();
 		}
@@ -124,6 +126,8 @@ var playTopRight = function (){
 	//	PS.spriteShow(topRight, 0);
 		ballCounter +=1;
 		PS.timerStop(ballTimer);
+		sprite_trx = 9;
+		sprite_try = -1;
 		if (ballCounter < 10) {
 			randomizeCircles();
 		}
@@ -141,6 +145,8 @@ var playBottomLeft = function (){
 	//	PS.spriteShow(bottomLeft, 0);
 		ballCounter +=1;
 		PS.timerStop(ballTimer);
+		sprite_blx = -1;
+		sprite_bly = 9;
 		if (ballCounter < 10) {
 			randomizeCircles();
 		}
@@ -158,6 +164,8 @@ var playBottomRight = function (){
 	//	PS.spriteShow(bottomRight, 0);
 		ballCounter +=1;
 		PS.timerStop(ballTimer);
+		sprite_brx = 9;
+		sprite_bry = 9;
 		if (ballCounter < 10) {
 			randomizeCircles();
 		}
