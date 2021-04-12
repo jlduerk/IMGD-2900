@@ -45,49 +45,30 @@ let sprite_blx = -1;
 let sprite_bly = 9;
 let sprite_brx = 9;
 let sprite_bry = 9;
-var timerVar = new Array(10);
 
+var ballTimer;
+var ballCounter = 0;
 
 
 var randomizeCircles = function () {
-	var i;
-	PS.debug("Hello1");
-
-	PS.debug("Hello");
-	for (i=0; i <= 10; i++) {
-		var colorPick = Math.floor(Math.random() * 4);
-		if (colorPick == 0) {
-			timerVar[i] = PS.timerStart(SPEED, playTopLeft);
-			PS.debug(timerVar[i]);
-		} else if (colorPick == 1) {
-			timerVar[i] = PS.timerStart(SPEED, playTopRight);
-			PS.debug(timerVar[i]);
-		} else if (colorPick == 2) {
-			timerVar[i] = PS.timerStart(SPEED, playBottomLeft);
-			PS.debug(timerVar[i]);
-		} else if (colorPick == 3) {
-			timerVar[i] = PS.timerStart(SPEED, playBottomRight);
-			PS.debug(timerVar[i]);
-		}
+	var randBall = Math.floor(Math.random()*4);
+	if (randBall == 0){
+	//	playTopLeft();
+		ballTimer = PS.timerStart(SPEED, playTopLeft);
+	} else if (randBall == 1){
+	//	playTopRight();
+		ballTimer = PS.timerStart(SPEED, playTopRight);
+	} else if (randBall == 2){
+	//	playBottomLeft();
+		ballTimer = PS.timerStart(SPEED, playBottomLeft);
+	} else if (randBall == 3){
+	//	playBottomRight();
+		ballTimer = PS.timerStart(SPEED, playBottomRight);
 	}
+
 }
 
-var ballTimer = function (){
-	var i;
-	for (i=0; i <= 10; i++) {
-		if (timerVar[i] != null){
-			if (sprite_tlx = 4) {
-				PS.timerStop(timerVar[i]);
-			} else if (sprite_trx = 4) {
-				PS.timerStop(timerVar[i]);
-			} else if (sprite_blx = 4) {
-				PS.timerStop(timerVar[i]);
-			} else if (sprite_brx = 4) {
-				PS.timerStop(timerVar[i]);
-			}
-		}
-	}
-}
+
 
 
 var moveTL = function (h, v){
@@ -114,14 +95,21 @@ var moveBR = function (h, v){
 	PS.spriteMove(sprite_id, sprite_brx, sprite_bry);
 }
 
+
+
 var playTopLeft = function () {
 	PS.spriteShow(topLeft, 1);
 	sprite_id = topLeft;
 	if (sprite_tlx < 4) {
 		moveTL(1, 1);
 	} else {
-		PS.spriteShow(topLeft, 0);
 		PS.spriteMove(topLeft, 0, 0);
+	//	PS.spriteShow(topLeft, 0);
+		ballCounter +=1;
+		PS.timerStop(ballTimer);
+		if (ballCounter < 10) {
+			randomizeCircles();
+		}
 	}
 }
 
@@ -132,8 +120,13 @@ var playTopRight = function (){
 	if (sprite_trx > 4) {
 		moveTR(-1, 1);
 	} else {
-		PS.spriteShow(topRight, 0);
 		PS.spriteMove(topRight, 8, 0);
+	//	PS.spriteShow(topRight, 0);
+		ballCounter +=1;
+		PS.timerStop(ballTimer);
+		if (ballCounter < 10) {
+			randomizeCircles();
+		}
 	}
 }
 
@@ -144,8 +137,13 @@ var playBottomLeft = function (){
 	if (sprite_blx < 4) {
 		moveBL(1, -1);
 	} else {
-		PS.spriteShow(bottomLeft, 0);
 		PS.spriteMove(bottomLeft, 0, 8);
+	//	PS.spriteShow(bottomLeft, 0);
+		ballCounter +=1;
+		PS.timerStop(ballTimer);
+		if (ballCounter < 10) {
+			randomizeCircles();
+		}
 	}
 }
 
@@ -156,8 +154,13 @@ var playBottomRight = function (){
 	if (sprite_brx > 4) {
 		moveBR(-1, -1);
 	} else {
-		PS.spriteShow(bottomRight, 0);
 		PS.spriteMove(bottomRight, 8, 8);
+	//	PS.spriteShow(bottomRight, 0);
+		ballCounter +=1;
+		PS.timerStop(ballTimer);
+		if (ballCounter < 10) {
+			randomizeCircles();
+		}
 	}
 }
 
@@ -220,9 +223,9 @@ PS.init = function( system, options ) {
 	PS.scale(PS.ALL, 9, 50);
 //	PS.border(PS.ALL, PS.ALL, 0);
 
+
 	randomizeCircles();
-	PS.timerStart(SPEED, ballTimer);
-	//ballTimer();
+	PS.debug(ballTimer);
 	// PS.dbLogin() must be called at the END
 	// of the PS.init() event handler (as shown)
 	// DO NOT MODIFY THIS FUNCTION CALL
