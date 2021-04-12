@@ -26,13 +26,142 @@ var COLOR_1 = 0x66D8FF;
 var COLOR_2 = 0x38FF57;
 var COLOR_3 = 0xFF8145;
 var COLOR_4 = 0xFF4FF5;
+var BLACK = 0x000000;
+var SPEED = 30;
+var circlesPos = [];
+var CENTER_POS_X = 4;
+var CENTER_POS_Y = 4;
+var centerPos;
+var topLeft;
+var topRight;
+var bottomLeft;
+var bottomRight;
+let sprite_id;
+let sprite_tlx = -1;
+let sprite_tly = -1;
+let sprite_trx = 9;
+let sprite_try = -1;
+let sprite_blx = -1;
+let sprite_bly = 9;
+let sprite_brx = 9;
+let sprite_bry = 9;
+var timerVar = new Array(10);
 
 
-animateCircles = function (){
-	var 
 
+var randomizeCircles = function () {
+	var i;
+	PS.debug("Hello1");
 
+	PS.debug("Hello");
+	for (i=0; i <= 10; i++) {
+		var colorPick = Math.floor(Math.random() * 4);
+		if (colorPick == 0) {
+			timerVar[i] = PS.timerStart(SPEED, playTopLeft);
+			PS.debug(timerVar[i]);
+		} else if (colorPick == 1) {
+			timerVar[i] = PS.timerStart(SPEED, playTopRight);
+			PS.debug(timerVar[i]);
+		} else if (colorPick == 2) {
+			timerVar[i] = PS.timerStart(SPEED, playBottomLeft);
+			PS.debug(timerVar[i]);
+		} else if (colorPick == 3) {
+			timerVar[i] = PS.timerStart(SPEED, playBottomRight);
+			PS.debug(timerVar[i]);
+		}
+	}
 }
+
+var ballTimer = function (){
+	var i;
+	for (i=0; i <= 10; i++) {
+		if (timerVar[i] != null){
+			if (sprite_tlx = 4) {
+				PS.timerStop(timerVar[i]);
+			} else if (sprite_trx = 4) {
+				PS.timerStop(timerVar[i]);
+			} else if (sprite_blx = 4) {
+				PS.timerStop(timerVar[i]);
+			} else if (sprite_brx = 4) {
+				PS.timerStop(timerVar[i]);
+			}
+		}
+	}
+}
+
+
+var moveTL = function (h, v){
+	sprite_tlx += h;
+	sprite_tly += v;
+	PS.spriteMove(sprite_id, sprite_tlx, sprite_tly);
+}
+
+var moveTR = function (h, v){
+	sprite_trx += h;
+	sprite_try += v;
+	PS.spriteMove(sprite_id, sprite_trx, sprite_try);
+}
+
+var moveBL = function (h, v){
+	sprite_blx += h;
+	sprite_bly += v;
+	PS.spriteMove(sprite_id, sprite_blx, sprite_bly);
+}
+
+var moveBR = function (h, v){
+	sprite_brx += h;
+	sprite_bry += v;
+	PS.spriteMove(sprite_id, sprite_brx, sprite_bry);
+}
+
+var playTopLeft = function () {
+	PS.spriteShow(topLeft, 1);
+	sprite_id = topLeft;
+	if (sprite_tlx < 4) {
+		moveTL(1, 1);
+	} else {
+		PS.spriteShow(topLeft, 0);
+		PS.spriteMove(topLeft, 0, 0);
+	}
+}
+
+
+var playTopRight = function (){
+	PS.spriteShow(topRight, 1);
+	sprite_id = topRight;
+	if (sprite_trx > 4) {
+		moveTR(-1, 1);
+	} else {
+		PS.spriteShow(topRight, 0);
+		PS.spriteMove(topRight, 8, 0);
+	}
+}
+
+
+var playBottomLeft = function (){
+	PS.spriteShow(bottomLeft, 1);
+	sprite_id = bottomLeft;
+	if (sprite_blx < 4) {
+		moveBL(1, -1);
+	} else {
+		PS.spriteShow(bottomLeft, 0);
+		PS.spriteMove(bottomLeft, 0, 8);
+	}
+}
+
+
+var playBottomRight = function (){
+	PS.spriteShow(bottomRight, 1);
+	sprite_id = bottomRight;
+	if (sprite_brx > 4) {
+		moveBR(-1, -1);
+	} else {
+		PS.spriteShow(bottomRight, 0);
+		PS.spriteMove(bottomRight, 8, 8);
+	}
+}
+
+
 
 PS.init = function( system, options ) {
 	// Change this string to your team name
@@ -49,7 +178,37 @@ PS.init = function( system, options ) {
 	// Install additional initialization code
 	// here as needed
 
-	PS.color(4, 4, 0x000000);
+	centerPos = PS.spriteSolid(1, 1);
+	PS.spriteSolidColor(centerPos, BLACK);
+	PS.spriteMove(centerPos, 4, 4);
+
+
+	topLeft = PS.spriteSolid(1, 1);
+	PS.spriteSolidColor(topLeft, COLOR_1);
+	PS.spriteMove(topLeft, 0, 0);
+	PS.spriteShow(topLeft, 0);
+	PS.spritePlane(topLeft, 1);
+
+	topRight = PS.spriteSolid(1, 1);
+	PS.spriteSolidColor(topRight, COLOR_2);
+	PS.spriteMove(topRight, 8, 0);
+	PS.spriteShow(topRight, 0);
+	PS.spritePlane(topRight, 1);
+
+	bottomLeft = PS.spriteSolid(1, 1);
+	PS.spriteSolidColor(bottomLeft, COLOR_3);
+	PS.spriteMove(bottomLeft, 0, 8);
+	PS.spriteShow(bottomLeft, 0);
+	PS.spritePlane(bottomLeft, 1);
+
+
+	bottomRight = PS.spriteSolid(1, 1);
+	PS.spriteSolidColor(bottomRight, COLOR_4);
+	PS.spriteMove(bottomRight, 8, 8);
+	PS.spriteShow(bottomRight, 0);
+	PS.spritePlane(bottomRight, 1);
+
+
 	PS.color(1, 10, COLOR_1);
 	PS.color(3, 10, COLOR_2);
 	PS.color(5, 10, COLOR_3);
@@ -59,16 +218,11 @@ PS.init = function( system, options ) {
 	PS.radius(PS.ALL, PS.ALL, 50);
 	PS.radius(PS.ALL, 9, 0);
 	PS.scale(PS.ALL, 9, 50);
-	PS.border(PS.ALL, PS.ALL, 0);
+//	PS.border(PS.ALL, PS.ALL, 0);
 
-/*	Spawn Locations
-
-	PS.color(0, 1, COLOR_1);
-	PS.color(0, 8, COLOR_2);
-	PS.color(8, 1, COLOR_3);
-	PS.color(8, 8, COLOR_4);
-*/
-
+	randomizeCircles();
+	PS.timerStart(SPEED, ballTimer);
+	//ballTimer();
 	// PS.dbLogin() must be called at the END
 	// of the PS.init() event handler (as shown)
 	// DO NOT MODIFY THIS FUNCTION CALL
