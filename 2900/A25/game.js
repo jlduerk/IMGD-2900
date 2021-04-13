@@ -304,7 +304,6 @@ PS.init = function( system, options ) {
 		PS.dbSave( TEAM, PS.CURRENT, { discard : true } );
 	}, { active : false } );
 
-	PS.dbLogin();
 };
 
 
