@@ -27,7 +27,8 @@ var COLOR_2 = 0x38FF57;
 var COLOR_3 = 0xFF8145;
 var COLOR_4 = 0xFF4FF5;
 var BLACK = 0x000000;
-var SPEED = 15;
+const STARTSPEED = 10;
+var SPEED = 10;
 var circlesPos = [];
 var CENTER_POS_X = 4;
 var CENTER_POS_Y = 4;
@@ -208,6 +209,7 @@ var levelComplete = function() {
 }
 
 var initLevel = function(){
+	PS.gridShadow( false, PS.COLOR_GRAY_LIGHT );
 	PS.alpha(1, 10, 100);
 	PS.alpha(3, 10, 100);
 	PS.alpha(5, 10, 100);
@@ -216,7 +218,7 @@ var initLevel = function(){
 	PS.statusText("Level " + currentLevel);
 	if (currentLevel < 5) {
 		totalBallsPerLevel += 1;
-		SPEED += 1;
+		SPEED -= 1;
 	}
 	selectBalls = false;
 	selectCounter = 0;
@@ -226,6 +228,7 @@ var initLevel = function(){
 		randomizeCircles();
 	} else {
 		//if u fail a level for now we just go back to beginning hahaha
+		SPEED = STARTSPEED;
 		currentLevel = 1;
 		totalBallsPerLevel = 0;
 		levelSuccess = true;
@@ -304,7 +307,7 @@ PS.init = function( system, options ) {
 		PS.dbEvent( TEAM, "startup", user );
 		//PS.dbSave( TEAM, PS.CURRENT, { discard : true } );
 		PS.dbSend( TEAM, PS.CURRENT, { discard : true } );
-	}, { active : true } );
+	}, { active : false } );
 };
 
 
@@ -333,13 +336,16 @@ PS.touch = function( x, y, data, options ) {
 			PS.alpha(x,y, onClickAlpha);
 			if (ballSequence[selectCounter] == 0) {
 				//PS.debug("correct selection");
+				//PS.gridShadow( true, PS.COLOR_GREEN );
 				selectCounter += 1;
 				if (selectCounter == ballSequence.length) {
+					PS.gridShadow( true, PS.COLOR_GREEN );
 					levelSuccess = true;
 					currentLevel += 1;
 					levelComplete();
 				}
 			} else { //the player messed up
+				PS.gridShadow( true, PS.COLOR_RED );
 				levelSuccess = false;
 				levelComplete();
 			}
@@ -347,13 +353,16 @@ PS.touch = function( x, y, data, options ) {
 			PS.alpha(x,y, onClickAlpha);
 			if (ballSequence[selectCounter] == 1) {
 				//PS.debug("correct selection");
+				//PS.gridShadow( true, PS.COLOR_GREEN );
 				selectCounter += 1;
 				if (selectCounter == ballSequence.length) {
+					PS.gridShadow( true, PS.COLOR_GREEN );
 					levelSuccess = true;
 					currentLevel += 1;
 					levelComplete();
 				}
 			} else { //the player messed up
+				PS.gridShadow( true, PS.COLOR_RED );
 				levelSuccess = false;
 				levelComplete();
 			}
@@ -362,13 +371,16 @@ PS.touch = function( x, y, data, options ) {
 			PS.alpha(x,y, onClickAlpha);
 			if (ballSequence[selectCounter] == 2) {
 				//PS.debug("correct selection");
+				//PS.gridShadow( true, PS.COLOR_GREEN );
 				selectCounter += 1;
 				if (selectCounter == ballSequence.length) {
+					PS.gridShadow( true, PS.COLOR_GREEN );
 					levelSuccess = true;
 					currentLevel += 1;
 					levelComplete();
 				}
 			} else { //the player messed up
+				PS.gridShadow( true, PS.COLOR_RED );
 				levelSuccess = false;
 				levelComplete();
 			}
@@ -376,13 +388,16 @@ PS.touch = function( x, y, data, options ) {
 			PS.alpha(x,y, onClickAlpha);
 			if (ballSequence[selectCounter] == 3) {
 				//PS.debug("correct selection");
+				//PS.gridShadow( true, PS.COLOR_GREEN );
 				selectCounter += 1;
 				if (selectCounter == ballSequence.length) {
+					PS.gridShadow( true, PS.COLOR_GREEN );
 					levelSuccess = true;
 					currentLevel += 1;
 					levelComplete();
 				}
 			} else { //the player messed up
+				PS.gridShadow( true, PS.COLOR_RED );
 				levelSuccess = false;
 				levelComplete();
 			}
