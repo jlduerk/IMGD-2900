@@ -114,6 +114,7 @@ var playTopLeft = function () {
 		PS.timerStop(ballTimer);
 		sprite_tlx = -1;
 		sprite_tly = -1;
+		PS.audioPlay("piano_c3");
 		if (ballCounter < totalBallsPerLevel) {
 			randomizeCircles();
 		} else { //done spawning balls 
@@ -134,6 +135,7 @@ var playTopRight = function (){
 		PS.timerStop(ballTimer);
 		sprite_trx = 9;
 		sprite_try = -1;
+		PS.audioPlay("piano_c4");
 		if (ballCounter < totalBallsPerLevel) {
 			randomizeCircles();
 		} else { //done spawning balls 
@@ -154,6 +156,7 @@ var playBottomLeft = function (){
 		PS.timerStop(ballTimer);
 		sprite_blx = -1;
 		sprite_bly = 9;
+		PS.audioPlay("piano_c5");
 		if (ballCounter < totalBallsPerLevel) {
 			randomizeCircles();
 		} else { //done spawning balls 
@@ -174,6 +177,7 @@ var playBottomRight = function (){
 		PS.timerStop(ballTimer);
 		sprite_brx = 9;
 		sprite_bry = 9;
+		PS.audioPlay("piano_c6");
 		if (ballCounter < totalBallsPerLevel) {
 			randomizeCircles();
 		} else { //done spawning balls 
@@ -320,7 +324,7 @@ This function doesn't have to do anything. Any value returned is ignored.
 [data : *] = The JavaScript value previously associated with bead(x, y) using PS.data(); default = 0.
 [options : Object] = A JavaScript object with optional data properties; see API documentation for details.
 */
-const onClickAlpha = 200;
+const onClickAlpha = 150;
 PS.touch = function( x, y, data, options ) {
 	//PS.color(1, 10, COLOR_1);
 	//PS.color(3, 10, COLOR_2);
@@ -334,6 +338,7 @@ PS.touch = function( x, y, data, options ) {
 	if (selectBalls == true) {
 		if (x == 1 && y == 10) { //COLOR_1
 			PS.alpha(x,y, onClickAlpha);
+			PS.audioPlay("piano_c3");
 			if (ballSequence[selectCounter] == 0) {
 				//PS.debug("correct selection");
 				//PS.gridShadow( true, PS.COLOR_GREEN );
@@ -346,11 +351,13 @@ PS.touch = function( x, y, data, options ) {
 				}
 			} else { //the player messed up
 				PS.gridShadow( true, PS.COLOR_RED );
+				//PS.audioPlay("piano_a0");
 				levelSuccess = false;
 				levelComplete();
 			}
 		} else if (x == 3 && y == 10) { //COLOR_2
 			PS.alpha(x,y, onClickAlpha);
+			PS.audioPlay("piano_c4");
 			if (ballSequence[selectCounter] == 1) {
 				//PS.debug("correct selection");
 				//PS.gridShadow( true, PS.COLOR_GREEN );
@@ -363,12 +370,14 @@ PS.touch = function( x, y, data, options ) {
 				}
 			} else { //the player messed up
 				PS.gridShadow( true, PS.COLOR_RED );
+				//PS.audioPlay("piano_a0");
 				levelSuccess = false;
 				levelComplete();
 			}
 			
 		} else if (x == 5 && y == 10) { //COLOR_3
 			PS.alpha(x,y, onClickAlpha);
+			PS.audioPlay("piano_c5");
 			if (ballSequence[selectCounter] == 2) {
 				//PS.debug("correct selection");
 				//PS.gridShadow( true, PS.COLOR_GREEN );
@@ -381,11 +390,13 @@ PS.touch = function( x, y, data, options ) {
 				}
 			} else { //the player messed up
 				PS.gridShadow( true, PS.COLOR_RED );
+				//PS.audioPlay("piano_a0");
 				levelSuccess = false;
 				levelComplete();
 			}
 		} else if (x == 7 && y == 10) { //COLOR_4
 			PS.alpha(x,y, onClickAlpha);
+			PS.audioPlay("piano_c6");
 			if (ballSequence[selectCounter] == 3) {
 				//PS.debug("correct selection");
 				//PS.gridShadow( true, PS.COLOR_GREEN );
@@ -398,6 +409,7 @@ PS.touch = function( x, y, data, options ) {
 				}
 			} else { //the player messed up
 				PS.gridShadow( true, PS.COLOR_RED );
+				//PS.audioPlay("piano_a0");
 				levelSuccess = false;
 				levelComplete();
 			}
