@@ -55,6 +55,7 @@ var ballSequence = []; //blue = 0, green = 1, orange = 2, magenta = 3
 let levelSuccess = true;
 var selectBalls = false;
 var selectCounter = 0;
+var highScore = 0;
 
 
 var randomizeCircles = function () {
@@ -205,7 +206,8 @@ var levelComplete = function() {
 		PS.statusText("Level Complete!");
 	} else { //IF YOU FAILED THE LEVEL
 		timerTicks = 180;
-		PS.statusText("GAME OVER!");
+		PS.statusText("GAME OVER! Score: " + currentLevel);
+		if (currentLevel > highScore) highScore = currentLevel;
 	}
 	
 	displayTimer = PS.timerStart(timerTicks, startNextLevel);
@@ -219,10 +221,16 @@ var initLevel = function(){
 	PS.alpha(5, 10, 100);
 	PS.alpha(7, 10, 100);
 
-	PS.statusText("Level " + currentLevel);
+	if (highScore > 0) {
+		PS.statusText("Current Score: " + currentLevel + "  High Score: " + highScore);
+	} else PS.statusText("Current Score: " + currentLevel);
 	if (currentLevel < 5) {
 		totalBallsPerLevel += 1;
 		SPEED -= 1;
+	} else {
+		if (currentLevel % 2 == 0 && currentLevel > 7) { // balls increase every other level after 7
+			totalBallsPerLevel += 1;
+		}
 	}
 	selectBalls = false;
 	selectCounter = 0;
