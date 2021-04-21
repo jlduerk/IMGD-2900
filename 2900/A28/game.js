@@ -196,6 +196,7 @@ var selectBallsTime = function() {
 }
 
 var levelComplete = function() {
+	selectBalls = false;
 	var displayTimer;
 	var timerTicks = 60;
 	var startNextLevel = function () {
