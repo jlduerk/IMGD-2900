@@ -22,11 +22,19 @@ Any value returned is ignored.
 [options : Object] = A JavaScript object with optional data properties; see API documentation for details.
 */
 
+var colorScheme1 = [0x66D8FF, 0x38FF57, 0xFF8145, 0xFF4FF5];
+var colorScheme2 = [0xef476f, 0xffd166, 0x06d6a0, 0x118ab2];
+var colorScheme3 = [0x811d5e, 0xfd2f24, 0xff6f01, 0xfed800];
+var colorScheme4 = [0xacdee7, 0xccaacb, 0xffffb7, 0xffcdb6];
+
+var colorSchemes = [];
+
 var COLOR_1 = 0x66D8FF;
 var COLOR_2 = 0x38FF57;
 var COLOR_3 = 0xFF8145;
 var COLOR_4 = 0xFF4FF5;
 var BLACK = 0x000000;
+var WHITE = 0xFFFFFF;
 const STARTSPEED = 10;
 var SPEED = 10;
 var circlesPos = [];
@@ -55,6 +63,7 @@ var ballSequence = []; //blue = 0, green = 1, orange = 2, magenta = 3
 let levelSuccess = true;
 var selectBalls = false;
 var selectCounter = 0;
+var highScore = 0;
 
 
 var randomizeCircles = function () {
@@ -103,7 +112,7 @@ var moveBR = function (h, v){
 
 
 var playTopLeft = function () {
-	PS.spriteShow(topLeft, 1);
+//	PS.spriteShow(topLeft, 1);
 	sprite_id = topLeft;
 	if (sprite_tlx < 4) {
 		moveTL(1, 1);
@@ -115,6 +124,12 @@ var playTopLeft = function () {
 		sprite_tlx = -1;
 		sprite_tly = -1;
 		PS.audioPlay("piano_c3");
+		topLeft = PS.spriteSolid(1, 1);
+		PS.spriteSolidColor(topLeft, COLOR_1);
+		PS.spriteMove(topLeft, 0, 0);
+		centerPos = PS.spriteSolid(1, 1);
+		PS.spriteSolidColor(centerPos, WHITE);
+		PS.spriteMove(centerPos, 4, 4);
 		if (ballCounter < totalBallsPerLevel) {
 			randomizeCircles();
 		} else { //done spawning balls 
@@ -124,7 +139,7 @@ var playTopLeft = function () {
 }
 
 var playTopRight = function (){
-	PS.spriteShow(topRight, 1);
+//	PS.spriteShow(topRight, 1);
 	sprite_id = topRight;
 	if (sprite_trx > 4) {
 		moveTR(-1, 1);
@@ -136,6 +151,12 @@ var playTopRight = function (){
 		sprite_trx = 9;
 		sprite_try = -1;
 		PS.audioPlay("piano_c4");
+		topRight = PS.spriteSolid(1, 1);
+		PS.spriteSolidColor(topRight, COLOR_2);
+		PS.spriteMove(topRight, 8, 0);
+		centerPos = PS.spriteSolid(1, 1);
+		PS.spriteSolidColor(centerPos, WHITE);
+		PS.spriteMove(centerPos, 4, 4);
 		if (ballCounter < totalBallsPerLevel) {
 			randomizeCircles();
 		} else { //done spawning balls 
@@ -145,7 +166,7 @@ var playTopRight = function (){
 }
 
 var playBottomLeft = function (){
-	PS.spriteShow(bottomLeft, 1);
+//	PS.spriteShow(bottomLeft, 1);
 	sprite_id = bottomLeft;
 	if (sprite_blx < 4) {
 		moveBL(1, -1);
@@ -157,6 +178,12 @@ var playBottomLeft = function (){
 		sprite_blx = -1;
 		sprite_bly = 9;
 		PS.audioPlay("piano_c5");
+		bottomLeft = PS.spriteSolid(1, 1);
+		PS.spriteSolidColor(bottomLeft, COLOR_3);
+		PS.spriteMove(bottomLeft, 0, 8);
+		centerPos = PS.spriteSolid(1, 1);
+		PS.spriteSolidColor(centerPos, WHITE);
+		PS.spriteMove(centerPos, 4, 4);
 		if (ballCounter < totalBallsPerLevel) {
 			randomizeCircles();
 		} else { //done spawning balls 
@@ -166,7 +193,7 @@ var playBottomLeft = function (){
 }
 
 var playBottomRight = function (){
-	PS.spriteShow(bottomRight, 1);
+//	PS.spriteShow(bottomRight, 1);
 	sprite_id = bottomRight;
 	if (sprite_brx > 4) {
 		moveBR(-1, -1);
@@ -178,6 +205,12 @@ var playBottomRight = function (){
 		sprite_brx = 9;
 		sprite_bry = 9;
 		PS.audioPlay("piano_c6");
+		bottomRight = PS.spriteSolid(1, 1);
+		PS.spriteSolidColor(bottomRight, COLOR_4);
+		PS.spriteMove(bottomRight, 8, 8);
+		centerPos = PS.spriteSolid(1, 1);
+		PS.spriteSolidColor(centerPos, WHITE);
+		PS.spriteMove(centerPos, 4, 4);
 		if (ballCounter < totalBallsPerLevel) {
 			randomizeCircles();
 		} else { //done spawning balls 
@@ -195,6 +228,7 @@ var selectBallsTime = function() {
 }
 
 var levelComplete = function() {
+	selectBalls = false;
 	var displayTimer;
 	var timerTicks = 60;
 	var startNextLevel = function () {
@@ -205,7 +239,8 @@ var levelComplete = function() {
 		PS.statusText("Level Complete!");
 	} else { //IF YOU FAILED THE LEVEL
 		timerTicks = 180;
-		PS.statusText("GAME OVER!");
+		PS.statusText("GAME OVER! Score: " + currentLevel);
+		if (currentLevel > highScore) highScore = currentLevel;
 	}
 	
 	displayTimer = PS.timerStart(timerTicks, startNextLevel);
@@ -213,16 +248,91 @@ var levelComplete = function() {
 }
 
 var initLevel = function(){
+
 	PS.gridShadow( false, PS.COLOR_GRAY_LIGHT );
 	PS.alpha(1, 10, 100);
 	PS.alpha(3, 10, 100);
 	PS.alpha(5, 10, 100);
 	PS.alpha(7, 10, 100);
 
-	PS.statusText("Level " + currentLevel);
+	if (highScore > 0) {
+		PS.statusText("Current Score: " + currentLevel + "  High Score: " + highScore);
+	} else PS.statusText("Current Score: " + currentLevel);
+	var colorRand = Math.floor(Math.random() * 4) + 1;
+	if (colorRand == 1) {
+		COLOR_1 = colorSchemes[0][0];
+		COLOR_2 = colorSchemes[0][1];
+		COLOR_3 = colorSchemes[0][2];
+		COLOR_4 = colorSchemes[0][3];
+	} else if (colorRand == 2) {
+		COLOR_1 = colorSchemes[1][0];
+		COLOR_2 = colorSchemes[1][1];
+		COLOR_3 = colorSchemes[1][2];
+		COLOR_4 = colorSchemes[1][3];
+	} else if (colorRand == 3) {
+		COLOR_1 = colorSchemes[2][0];
+		COLOR_2 = colorSchemes[2][1];
+		COLOR_3 = colorSchemes[2][2];
+		COLOR_4 = colorSchemes[2][3];
+	} else {
+		COLOR_1 = colorSchemes[3][0];
+		COLOR_2 = colorSchemes[3][1];
+		COLOR_3 = colorSchemes[3][2];
+		COLOR_4 = colorSchemes[3][3];
+	}
+
+	topLeft = PS.spriteSolid(1, 1);
+	PS.spriteSolidColor(topLeft, COLOR_1);
+	PS.spriteMove(topLeft, 0, 0);
+//	PS.spriteShow(topLeft, 0);
+	PS.spritePlane(topLeft, 1);
+
+	topRight = PS.spriteSolid(1, 1);
+	PS.spriteSolidColor(topRight, COLOR_2);
+	PS.spriteMove(topRight, 8, 0);
+//	PS.spriteShow(topRight, 0);
+	PS.spritePlane(topRight, 1);
+
+	bottomLeft = PS.spriteSolid(1, 1);
+	PS.spriteSolidColor(bottomLeft, COLOR_3);
+	PS.spriteMove(bottomLeft, 0, 8);
+//	PS.spriteShow(bottomLeft, 0);
+	PS.spritePlane(bottomLeft, 1);
+
+
+	bottomRight = PS.spriteSolid(1, 1);
+	PS.spriteSolidColor(bottomRight, COLOR_4);
+	PS.spriteMove(bottomRight, 8, 8);
+//	PS.spriteShow(bottomRight, 0);
+	PS.spritePlane(bottomRight, 1);
+
+	PS.color(PS.ALL, PS.ALL, BLACK);
+	PS.color(1, 10, COLOR_1);
+	PS.color(3, 10, COLOR_2);
+	PS.color(5, 10, COLOR_3);
+	PS.color(7, 10, COLOR_4);
+	PS.color(PS.ALL, 9, WHITE);
+	PS.gridColor(BLACK);
+	PS.statusColor(WHITE);
+
+	centerPos = PS.spriteSolid(1, 1);
+	PS.spriteSolidColor(centerPos, WHITE);
+	PS.spriteMove(centerPos, 4, 4);
+
+
+	PS.radius(PS.ALL, PS.ALL, 50);
+	PS.radius(PS.ALL, 9, 0);
+	PS.scale(PS.ALL, 9, 50);
+	PS.border(PS.ALL, PS.ALL, 0);
+
+	
 	if (currentLevel < 5) {
 		totalBallsPerLevel += 1;
 		SPEED -= 1;
+	} else {
+		if (currentLevel % 2 == 0 && currentLevel > 7) { // balls increase every other level after 7
+			totalBallsPerLevel += 1;
+		}
 	}
 	selectBalls = false;
 	selectCounter = 0;
@@ -252,50 +362,10 @@ PS.init = function( system, options ) {
 
 	PS.gridSize( 9, 11); // or whatever size you want
 
+	colorSchemes = [colorScheme1, colorScheme2, colorScheme3, colorScheme4];
+
 	// Install additional initialization code
 	// here as needed
-
-	centerPos = PS.spriteSolid(1, 1);
-	PS.spriteSolidColor(centerPos, BLACK);
-	PS.spriteMove(centerPos, 4, 4);
-
-
-	topLeft = PS.spriteSolid(1, 1);
-	PS.spriteSolidColor(topLeft, COLOR_1);
-	PS.spriteMove(topLeft, 0, 0);
-	PS.spriteShow(topLeft, 0);
-	PS.spritePlane(topLeft, 1);
-
-	topRight = PS.spriteSolid(1, 1);
-	PS.spriteSolidColor(topRight, COLOR_2);
-	PS.spriteMove(topRight, 8, 0);
-	PS.spriteShow(topRight, 0);
-	PS.spritePlane(topRight, 1);
-
-	bottomLeft = PS.spriteSolid(1, 1);
-	PS.spriteSolidColor(bottomLeft, COLOR_3);
-	PS.spriteMove(bottomLeft, 0, 8);
-	PS.spriteShow(bottomLeft, 0);
-	PS.spritePlane(bottomLeft, 1);
-
-
-	bottomRight = PS.spriteSolid(1, 1);
-	PS.spriteSolidColor(bottomRight, COLOR_4);
-	PS.spriteMove(bottomRight, 8, 8);
-	PS.spriteShow(bottomRight, 0);
-	PS.spritePlane(bottomRight, 1);
-
-
-	PS.color(1, 10, COLOR_1);
-	PS.color(3, 10, COLOR_2);
-	PS.color(5, 10, COLOR_3);
-	PS.color(7, 10, COLOR_4);
-	PS.color(PS.ALL, 9, 0x000000);
-
-	PS.radius(PS.ALL, PS.ALL, 50);
-	PS.radius(PS.ALL, 9, 0);
-	PS.scale(PS.ALL, 9, 50);
-	PS.border(PS.ALL, PS.ALL, 0);
 
 	initLevel();
 	// PS.dbLogin() must be called at the END
