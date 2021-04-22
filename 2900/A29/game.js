@@ -247,6 +247,8 @@ var levelComplete = function() {
 
 }
 
+var colorRand = 1;
+
 var initLevel = function(){
 
 	PS.gridShadow( false, PS.COLOR_GRAY_LIGHT );
@@ -258,27 +260,36 @@ var initLevel = function(){
 	if (highScore > 0) {
 		PS.statusText("Current Score: " + currentLevel + "  High Score: " + highScore);
 	} else PS.statusText("Current Score: " + currentLevel);
-	var colorRand = Math.floor(Math.random() * 4) + 1;
-	if (colorRand == 1) {
-		COLOR_1 = colorSchemes[0][0];
-		COLOR_2 = colorSchemes[0][1];
-		COLOR_3 = colorSchemes[0][2];
-		COLOR_4 = colorSchemes[0][3];
-	} else if (colorRand == 2) {
-		COLOR_1 = colorSchemes[1][0];
-		COLOR_2 = colorSchemes[1][1];
-		COLOR_3 = colorSchemes[1][2];
-		COLOR_4 = colorSchemes[1][3];
-	} else if (colorRand == 3) {
-		COLOR_1 = colorSchemes[2][0];
-		COLOR_2 = colorSchemes[2][1];
-		COLOR_3 = colorSchemes[2][2];
-		COLOR_4 = colorSchemes[2][3];
-	} else {
-		COLOR_1 = colorSchemes[3][0];
-		COLOR_2 = colorSchemes[3][1];
-		COLOR_3 = colorSchemes[3][2];
-		COLOR_4 = colorSchemes[3][3];
+	if (currentLevel % 5 == 0) { // color changes every 5 levels
+
+		//Prevent having same color twice in a row
+		var colorRand2 = colorRand;
+		while (colorRand == colorRand2) {
+			colorRand2 = Math.floor(Math.random() * 4) + 1;
+		}
+		colorRand = colorRand2;
+
+		if (colorRand == 1) {
+			COLOR_1 = colorSchemes[0][0];
+			COLOR_2 = colorSchemes[0][1];
+			COLOR_3 = colorSchemes[0][2];
+			COLOR_4 = colorSchemes[0][3];
+		} else if (colorRand == 2) {
+			COLOR_1 = colorSchemes[1][0];
+			COLOR_2 = colorSchemes[1][1];
+			COLOR_3 = colorSchemes[1][2];
+			COLOR_4 = colorSchemes[1][3];
+		} else if (colorRand == 3) {
+			COLOR_1 = colorSchemes[2][0];
+			COLOR_2 = colorSchemes[2][1];
+			COLOR_3 = colorSchemes[2][2];
+			COLOR_4 = colorSchemes[2][3];
+		} else {
+			COLOR_1 = colorSchemes[3][0];
+			COLOR_2 = colorSchemes[3][1];
+			COLOR_3 = colorSchemes[3][2];
+			COLOR_4 = colorSchemes[3][3];
+		}
 	}
 
 	topLeft = PS.spriteSolid(1, 1);
