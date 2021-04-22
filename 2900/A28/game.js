@@ -22,6 +22,13 @@ Any value returned is ignored.
 [options : Object] = A JavaScript object with optional data properties; see API documentation for details.
 */
 
+var colorScheme1 = [0x66D8FF, 0x38FF57, 0xFF8145, 0xFF4FF5];
+var colorScheme2 = [0xef476f, 0xffd166, 0x06d6a0, 0x118ab2];
+var colorScheme3 = [0x811d5e, 0xfd2f24, 0xff6f01, 0xfed800];
+var colorScheme4 = [0xacdee7, 0xccaacb, 0xffffb7, 0xffcdb6];
+
+var colorSchemes = [];
+
 var COLOR_1 = 0x66D8FF;
 var COLOR_2 = 0x38FF57;
 var COLOR_3 = 0xFF8145;
@@ -241,6 +248,7 @@ var levelComplete = function() {
 }
 
 var initLevel = function(){
+
 	PS.gridShadow( false, PS.COLOR_GRAY_LIGHT );
 	PS.alpha(1, 10, 100);
 	PS.alpha(3, 10, 100);
@@ -250,45 +258,28 @@ var initLevel = function(){
 	if (highScore > 0) {
 		PS.statusText("Current Score: " + currentLevel + "  High Score: " + highScore);
 	} else PS.statusText("Current Score: " + currentLevel);
-	if (currentLevel < 5) {
-		totalBallsPerLevel += 1;
-		SPEED -= 1;
+	var colorRand = Math.floor(Math.random() * 4) + 1;
+	if (colorRand == 1) {
+		COLOR_1 = colorSchemes[0][0];
+		COLOR_2 = colorSchemes[0][1];
+		COLOR_3 = colorSchemes[0][2];
+		COLOR_4 = colorSchemes[0][3];
+	} else if (colorRand == 2) {
+		COLOR_1 = colorSchemes[1][0];
+		COLOR_2 = colorSchemes[1][1];
+		COLOR_3 = colorSchemes[1][2];
+		COLOR_4 = colorSchemes[1][3];
+	} else if (colorRand == 3) {
+		COLOR_1 = colorSchemes[2][0];
+		COLOR_2 = colorSchemes[2][1];
+		COLOR_3 = colorSchemes[2][2];
+		COLOR_4 = colorSchemes[2][3];
 	} else {
-		if (currentLevel % 2 == 0 && currentLevel > 7) { // balls increase every other level after 7
-			totalBallsPerLevel += 1;
-		}
+		COLOR_1 = colorSchemes[3][0];
+		COLOR_2 = colorSchemes[3][1];
+		COLOR_3 = colorSchemes[3][2];
+		COLOR_4 = colorSchemes[3][3];
 	}
-	selectBalls = false;
-	selectCounter = 0;
-	ballCounter = 0;
-	ballSequence = [];
-	if (levelSuccess == true) {
-		randomizeCircles();
-	} else {
-		//if u fail a level for now we just go back to beginning hahaha
-		SPEED = STARTSPEED;
-		currentLevel = 1;
-		totalBallsPerLevel = 0;
-		levelSuccess = true;
-		initLevel();
-	}
-}
-
-PS.init = function( system, options ) {
-	// Change this string to your team name
-	// Use only ALPHABETIC characters
-	// No numbers, spaces or punctuation!
-
-	const TEAM = "frog";
-
-	// Begin with essential setup
-	// Establish initial grid size
-
-	PS.gridSize( 9, 11); // or whatever size you want
-
-	// Install additional initialization code
-	// here as needed
-
 
 	topLeft = PS.spriteSolid(1, 1);
 	PS.spriteSolidColor(topLeft, COLOR_1);
@@ -333,6 +324,48 @@ PS.init = function( system, options ) {
 	PS.radius(PS.ALL, 9, 0);
 	PS.scale(PS.ALL, 9, 50);
 	PS.border(PS.ALL, PS.ALL, 0);
+
+	
+	if (currentLevel < 5) {
+		totalBallsPerLevel += 1;
+		SPEED -= 1;
+	} else {
+		if (currentLevel % 2 == 0 && currentLevel > 7) { // balls increase every other level after 7
+			totalBallsPerLevel += 1;
+		}
+	}
+	selectBalls = false;
+	selectCounter = 0;
+	ballCounter = 0;
+	ballSequence = [];
+	if (levelSuccess == true) {
+		randomizeCircles();
+	} else {
+		//if u fail a level for now we just go back to beginning hahaha
+		SPEED = STARTSPEED;
+		currentLevel = 1;
+		totalBallsPerLevel = 0;
+		levelSuccess = true;
+		initLevel();
+	}
+}
+
+PS.init = function( system, options ) {
+	// Change this string to your team name
+	// Use only ALPHABETIC characters
+	// No numbers, spaces or punctuation!
+
+	const TEAM = "frog";
+
+	// Begin with essential setup
+	// Establish initial grid size
+
+	PS.gridSize( 9, 11); // or whatever size you want
+
+	colorSchemes = [colorScheme1, colorScheme2, colorScheme3, colorScheme4];
+
+	// Install additional initialization code
+	// here as needed
 
 	initLevel();
 	// PS.dbLogin() must be called at the END
