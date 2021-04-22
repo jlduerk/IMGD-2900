@@ -27,6 +27,7 @@ var COLOR_2 = 0x38FF57;
 var COLOR_3 = 0xFF8145;
 var COLOR_4 = 0xFF4FF5;
 var BLACK = 0x000000;
+var WHITE = 0xFFFFFF;
 const STARTSPEED = 10;
 var SPEED = 10;
 var circlesPos = [];
@@ -104,7 +105,7 @@ var moveBR = function (h, v){
 
 
 var playTopLeft = function () {
-	PS.spriteShow(topLeft, 1);
+//	PS.spriteShow(topLeft, 1);
 	sprite_id = topLeft;
 	if (sprite_tlx < 4) {
 		moveTL(1, 1);
@@ -116,6 +117,12 @@ var playTopLeft = function () {
 		sprite_tlx = -1;
 		sprite_tly = -1;
 		PS.audioPlay("piano_c3");
+		topLeft = PS.spriteSolid(1, 1);
+		PS.spriteSolidColor(topLeft, COLOR_1);
+		PS.spriteMove(topLeft, 0, 0);
+		centerPos = PS.spriteSolid(1, 1);
+		PS.spriteSolidColor(centerPos, WHITE);
+		PS.spriteMove(centerPos, 4, 4);
 		if (ballCounter < totalBallsPerLevel) {
 			randomizeCircles();
 		} else { //done spawning balls 
@@ -125,7 +132,7 @@ var playTopLeft = function () {
 }
 
 var playTopRight = function (){
-	PS.spriteShow(topRight, 1);
+//	PS.spriteShow(topRight, 1);
 	sprite_id = topRight;
 	if (sprite_trx > 4) {
 		moveTR(-1, 1);
@@ -137,6 +144,12 @@ var playTopRight = function (){
 		sprite_trx = 9;
 		sprite_try = -1;
 		PS.audioPlay("piano_c4");
+		topRight = PS.spriteSolid(1, 1);
+		PS.spriteSolidColor(topRight, COLOR_2);
+		PS.spriteMove(topRight, 8, 0);
+		centerPos = PS.spriteSolid(1, 1);
+		PS.spriteSolidColor(centerPos, WHITE);
+		PS.spriteMove(centerPos, 4, 4);
 		if (ballCounter < totalBallsPerLevel) {
 			randomizeCircles();
 		} else { //done spawning balls 
@@ -146,7 +159,7 @@ var playTopRight = function (){
 }
 
 var playBottomLeft = function (){
-	PS.spriteShow(bottomLeft, 1);
+//	PS.spriteShow(bottomLeft, 1);
 	sprite_id = bottomLeft;
 	if (sprite_blx < 4) {
 		moveBL(1, -1);
@@ -158,6 +171,12 @@ var playBottomLeft = function (){
 		sprite_blx = -1;
 		sprite_bly = 9;
 		PS.audioPlay("piano_c5");
+		bottomLeft = PS.spriteSolid(1, 1);
+		PS.spriteSolidColor(bottomLeft, COLOR_3);
+		PS.spriteMove(bottomLeft, 0, 8);
+		centerPos = PS.spriteSolid(1, 1);
+		PS.spriteSolidColor(centerPos, WHITE);
+		PS.spriteMove(centerPos, 4, 4);
 		if (ballCounter < totalBallsPerLevel) {
 			randomizeCircles();
 		} else { //done spawning balls 
@@ -167,7 +186,7 @@ var playBottomLeft = function (){
 }
 
 var playBottomRight = function (){
-	PS.spriteShow(bottomRight, 1);
+//	PS.spriteShow(bottomRight, 1);
 	sprite_id = bottomRight;
 	if (sprite_brx > 4) {
 		moveBR(-1, -1);
@@ -179,6 +198,12 @@ var playBottomRight = function (){
 		sprite_brx = 9;
 		sprite_bry = 9;
 		PS.audioPlay("piano_c6");
+		bottomRight = PS.spriteSolid(1, 1);
+		PS.spriteSolidColor(bottomRight, COLOR_4);
+		PS.spriteMove(bottomRight, 8, 8);
+		centerPos = PS.spriteSolid(1, 1);
+		PS.spriteSolidColor(centerPos, WHITE);
+		PS.spriteMove(centerPos, 4, 4);
 		if (ballCounter < totalBallsPerLevel) {
 			randomizeCircles();
 		} else { //done spawning balls 
@@ -264,42 +289,45 @@ PS.init = function( system, options ) {
 	// Install additional initialization code
 	// here as needed
 
-	centerPos = PS.spriteSolid(1, 1);
-	PS.spriteSolidColor(centerPos, BLACK);
-	PS.spriteMove(centerPos, 4, 4);
-
 
 	topLeft = PS.spriteSolid(1, 1);
 	PS.spriteSolidColor(topLeft, COLOR_1);
 	PS.spriteMove(topLeft, 0, 0);
-	PS.spriteShow(topLeft, 0);
+//	PS.spriteShow(topLeft, 0);
 	PS.spritePlane(topLeft, 1);
 
 	topRight = PS.spriteSolid(1, 1);
 	PS.spriteSolidColor(topRight, COLOR_2);
 	PS.spriteMove(topRight, 8, 0);
-	PS.spriteShow(topRight, 0);
+//	PS.spriteShow(topRight, 0);
 	PS.spritePlane(topRight, 1);
 
 	bottomLeft = PS.spriteSolid(1, 1);
 	PS.spriteSolidColor(bottomLeft, COLOR_3);
 	PS.spriteMove(bottomLeft, 0, 8);
-	PS.spriteShow(bottomLeft, 0);
+//	PS.spriteShow(bottomLeft, 0);
 	PS.spritePlane(bottomLeft, 1);
 
 
 	bottomRight = PS.spriteSolid(1, 1);
 	PS.spriteSolidColor(bottomRight, COLOR_4);
 	PS.spriteMove(bottomRight, 8, 8);
-	PS.spriteShow(bottomRight, 0);
+//	PS.spriteShow(bottomRight, 0);
 	PS.spritePlane(bottomRight, 1);
 
-
+	PS.color(PS.ALL, PS.ALL, BLACK);
 	PS.color(1, 10, COLOR_1);
 	PS.color(3, 10, COLOR_2);
 	PS.color(5, 10, COLOR_3);
 	PS.color(7, 10, COLOR_4);
-	PS.color(PS.ALL, 9, 0x000000);
+	PS.color(PS.ALL, 9, WHITE);
+	PS.gridColor(BLACK);
+	PS.statusColor(WHITE);
+
+	centerPos = PS.spriteSolid(1, 1);
+	PS.spriteSolidColor(centerPos, WHITE);
+	PS.spriteMove(centerPos, 4, 4);
+
 
 	PS.radius(PS.ALL, PS.ALL, 50);
 	PS.radius(PS.ALL, 9, 0);
