@@ -25,7 +25,6 @@ var GRID_X = 0;
 var GRID_Y = 0;
 var GROUND_COLOR = PS.COLOR_GREEN;
 var ACTOR_COLOR = PS.COLOR_BLUE;
-var SHELF_COLOR = PS.COLOR_PURPLE;
 var PLATFORM_COLOR = 0x600000;
 var MAP_PLATFORM = 0;
 var MAP_GROUND = 1;
@@ -36,8 +35,10 @@ var ACTOR_PLANE = 5;
 
 var SCROLL_COLOR = PS.COLOR_YELLOW;
 var SCROLL_PLANE = 1;
-var SCROLL_COUNT = 7;
 var SCROLL_MARKER = "scroll";
+
+var SHELF_COLOR = PS.COLOR_RED;
+var SHELF_PLANE = 4;
 
 var actor_x = 1;
 var actor_y = 1;
@@ -70,6 +71,15 @@ var is_platform = function ( x, y ) {
 	return ( data === MAP_PLATFORM );
 };
 
+var is_shelf = function ( x, y ) {
+	for (var i = 0; i < shelves.length; i++) {
+		if (shelves[i].x == x && shelves[i].y == y) {
+			return i;
+		} 
+	}
+	return -1000;
+}
+
 var shade = function ( color ) {
 	var RANGE, vary, r, g, b;
 
@@ -94,10 +104,42 @@ var actor_place = function ( x, y ) {
 	PS.spriteMove( actor_sprite, x, y );
 	actor_x = x;
 	actor_y = y;
+	PS.spriteSolidColor(actor_sprite, PS.COLOR_BLUE);
 
 	if ( PS.data( x, y ) === SCROLL_MARKER ) {
 		scroll_find( x, y );
 	}
+};
+
+//var shelf_index_counter = 0;
+var shelf_init = function( shelf_x, shelf_y ) {
+	//shelf_index_counter += 1;
+	var shelf_sprite = PS.spriteSolid( 1, 1 ); // Create 1x1 solid sprite, save its ID
+	PS.spriteSolidColor( shelf_sprite, SHELF_COLOR ); // assign color
+	PS.spritePlane( shelf_sprite, SHELF_PLANE ); // Move to assigned plane
+
+	var shelf_struct = {
+		sprite: shelf_sprite,
+		x: shelf_x,
+		y: shelf_y
+	};
+	shelves.push(shelf_struct);
+
+	shelf_place(shelf_x, shelf_y, shelves.length - 1);
+}
+
+
+var shelf_place = function ( x, y, index ) {
+	var oplane = PS.gridPlane(); // save og plane
+
+	PS.gridPlane( SHELF_PLANE );
+	//PS.debug(index + "\n");
+	PS.spriteMove( shelves[index].sprite, x, y );
+	shelves[index].x = x;
+	shelves[index].y = y;
+	PS.spriteSolidColor(shelves[index].sprite, PS.COLOR_VIOLET);
+
+	PS.gridPlane( oplane );
 };
 
 var scroll_place = function ( x, y ) {
@@ -113,6 +155,11 @@ var scroll_place = function ( x, y ) {
 
 var scroll_find = function ( x, y ) {
 	//idk what happens when you find a scroll lmao
+	var oplane = PS.gridPlane();
+	PS.gridPlane( SCROLL_PLANE );
+	PS.alpha( x, y, PS.ALPHA_TRANSPARENT );
+	PS.statusText("Level Complete!");
+	PS.gridPlane( oplane );
 }
 
 var actor_step = function ( h, v ) {
@@ -123,9 +170,20 @@ var actor_step = function ( h, v ) {
 	nx = actor_x + h;
 	ny = actor_y + v;
 
-	if ( is_platform( nx, ny ) ) {
+	if ( is_platform( nx, ny )) {
 		actor_onground = true;
 		return;
+	}
+	if (is_shelf( nx, ny) >= 0 && v > 0) {
+		actor_onground = true;
+		return;
+	}
+
+	if (h != 0) { //horizontal movement
+		var shelf_in_way = is_shelf( nx, ny );
+		if ( shelf_in_way >= 0) {
+			shelf_step(h, 0, shelf_in_way);
+		}
 	}
 
 	// Is new location off the grid?
@@ -138,6 +196,31 @@ var actor_step = function ( h, v ) {
 
 	actor_path = null;
 	actor_place( nx, ny );
+};
+
+
+var shelf_step = function ( h, v , index) {
+	var nx, ny;
+
+	// Calculate proposed new location.
+
+	nx = shelves[index].x + h;
+	ny = shelves[index].y + v;
+
+	if ( is_platform( nx, ny ) ) {
+		return;
+	}
+
+	// Is new location off the grid?
+	// If so, exit without moving.
+
+	if ( ( nx < 0 ) || ( nx >= GRID_X ) || ( ny < 0 ) || ( ny >= GRID_Y ) ) {
+		return;
+	}
+	actor_onground = false;
+
+	actor_path = null;
+	shelf_place( nx, ny, index );
 };
 
 var draw_map = function ( map ) {
@@ -186,15 +269,16 @@ var Update = function () {
 
 	//shelves
 	for (var i = 0; i < shelves.length; i++) {
-		//if (shelves[i].)
-
+		//PS.debug(shelves[i].sprite);
+		shelf_step( 0, 1, i);
 	}
-
 }
 
 PS.init = function( system, options ) {
 
 	var onMapLoad = function ( image ) {
+		shelf_index_counter = 0;
+
 		var i, x, y, data, pixel;
 
 		if ( image === PS.ERROR ) {
@@ -233,8 +317,12 @@ PS.init = function( system, options ) {
 						actor_x = x; // establish initial location of actor
 						actor_y = y;
 						break;
+					case SHELF_COLOR:
+						shelf_init( x, y ); //place shelf
+						break;
 					default:
 						PS.debug( "onMapLoad(): unrecognized pixel value\n" );
+						PS.debug("Pixel value: " + pixel + "\n");
 						break;
 				}
 				imagemap.data[ i ] = data; // install translated data
@@ -258,10 +346,10 @@ PS.init = function( system, options ) {
 	};
 
 	// Load the image map in format 1
-	PS.imageLoad( "images/maze3.gif", onMapLoad, 1 );
+	PS.imageLoad( "images/level1fixed2.gif", onMapLoad, 1 );
 
 	 //PS.gridSize( 16, 16 );
-	 PS.statusText( "yaseen this is death" );
+	 PS.statusText( "Collect the scroll!" );
 
 	//sampleShelf = PS.spriteSolid(1, 1);
 
@@ -314,21 +402,4 @@ PS.keyDown = function( key, shift, ctrl, options ) {
 	}
 };
 
-/*
-PS.keyUp ( key, shift, ctrl, options )
-Called when a key on the keyboard is released.
-This function doesn't have to do anything. Any value returned is ignored.
-[key : Number] = ASCII code of the released key, or one of the PS.KEY_* constants documented in the API.
-[shift : Boolean] = true if shift key is held down, else false.
-[ctrl : Boolean] = true if control key is held down, else false.
-[options : Object] = A JavaScript object with optional data properties; see API documentation for details.
-*/
-
-PS.keyUp = function( key, shift, ctrl, options ) {
-	// Uncomment the following code line to inspect first three parameters:
-
-	// PS.debug( "PS.keyUp(): key=" + key + ", shift=" + shift + ", ctrl=" + ctrl + "\n" );
-
-	// Add code here for when a key is released.
-};
 
