@@ -1,7 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="98fdfc00-b3fe-4f30-97b0-d8a623617a28" name="Default Changelist" comment="" />
+    <list default="true" id="98fdfc00-b3fe-4f30-97b0-d8a623617a28" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../A35/game.js" beforeDir="false" afterPath="$PROJECT_DIR$/../A35/game.js" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -63,6 +66,13 @@
       <workItem from="1619072313267" duration="112000" />
       <workItem from="1619662337426" duration="91000" />
       <workItem from="1619892800554" duration="1751000" />
+      <workItem from="1619976651389" duration="740000" />
+      <workItem from="1619978468971" duration="1518000" />
+      <workItem from="1619980287295" duration="811000" />
+      <workItem from="1619982995011" duration="1494000" />
+      <workItem from="1619984961152" duration="2759000" />
+      <workItem from="1619991018623" duration="1379000" />
+      <workItem from="1619997497134" duration="1151000" />
     </task>
     <servers />
   </component>

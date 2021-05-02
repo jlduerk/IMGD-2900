@@ -36,6 +36,7 @@ var ACTOR_PLANE = 5;
 var SCROLL_COLOR = PS.COLOR_YELLOW;
 var SCROLL_PLANE = 1;
 var SCROLL_MARKER = "scroll";
+var scroll_found = false;
 
 var SHELF_COLOR = PS.COLOR_RED;
 var SHELF_PLANE = 4;
@@ -56,6 +57,7 @@ var pathmap;
 var mapdata;
 
 var shelves = []; //array of shelves to look through on Update for gravity
+var levels = ["images/level1fixed2.gif", "images/level2test.gif"]; //array to keep track of levels
 
 var imagemap = {
 	width : 0,
@@ -160,6 +162,19 @@ var scroll_find = function ( x, y ) {
 	PS.alpha( x, y, PS.ALPHA_TRANSPARENT );
 	PS.statusText("Level Complete!");
 	PS.gridPlane( oplane );
+	scroll_found = true;
+	level_progress();
+}
+
+var level_progress = function (){
+//	var CURRENT_LEVEL;
+//	CURRENT_LEVEL = levels[];
+	if (scroll_found == true){
+//		if (CURRENT_LEVEL = levels[0]
+
+		PS.imageLoad( "images/rightcolors.gif", onMapLoad, 1 );
+		scroll_found = false;
+	}
 }
 
 var actor_step = function ( h, v ) {
@@ -252,6 +267,75 @@ var draw_map = function ( map ) {
 	PS.gridPlane( oplane );
 };
 
+
+var onMapLoad = function ( image ) {
+	shelf_index_counter = 0;
+
+	var i, x, y, data, pixel;
+
+	if ( image === PS.ERROR ) {
+		PS.debug( "onMapLoad(): image load error\n" );
+		return;
+	}
+
+	mapdata = image; // save map data for later
+
+	// Prepare grid for map drawing
+
+	imagemap.width = GRID_X = image.width;
+	imagemap.height = GRID_Y = image.height;
+
+	PS.gridSize( GRID_X, GRID_Y );
+	PS.border( PS.ALL, PS.ALL, 0 );
+
+	// Translate map pixels to data format expected by imagemap
+
+	i = 0; // init pointer into imagemap.data array
+
+	for ( y = 0; y < GRID_Y; y += 1 ) {
+		for ( x = 0; x < GRID_X; x += 1 ) {
+			data = MAP_GROUND; // assume ground
+			pixel = image.data[ i ];
+			switch ( pixel ) {
+				case GROUND_COLOR:
+					break; // no need to do anything
+				case PLATFORM_COLOR:
+					data = MAP_PLATFORM; // found a platform!
+					break;
+				case SCROLL_COLOR:
+					scroll_place( x, y ); // found a scroll!
+					break;
+				case ACTOR_COLOR:
+					actor_x = x; // establish initial location of actor
+					actor_y = y;
+					break;
+				case SHELF_COLOR:
+					shelf_init( x, y ); //place shelf
+					break;
+				default:
+					PS.debug( "onMapLoad(): unrecognized pixel value\n" );
+					PS.debug("Pixel value: " + pixel + "\n");
+					break;
+			}
+			imagemap.data[ i ] = data; // install translated data
+			i += 1; // update array pointer
+		}
+	}
+
+	// Now we can complete the initialization
+
+	GROUND_RGB = PS.unmakeRGB( GROUND_COLOR, {} );
+	PLATFORM_RGB = PS.unmakeRGB( PLATFORM_COLOR, {} );
+	draw_map( imagemap );
+
+	actor_sprite = PS.spriteSolid( 1, 1 ); // Create 1x1 solid sprite, save its ID
+	PS.spriteSolidColor( actor_sprite, ACTOR_COLOR ); // assign color
+	PS.spritePlane( actor_sprite, ACTOR_PLANE ); // Move to assigned plane
+
+	actor_place( actor_x, actor_y );
+	pathmap = PS.pathMap( imagemap );
+	timer_id = PS.timerStart(SPEED, Update);
+};
 // Similar to Update() in Unity
 // 1 timer for everything
 // If something occurs every tick, put in this function 
@@ -276,75 +360,6 @@ var Update = function () {
 
 PS.init = function( system, options ) {
 
-	var onMapLoad = function ( image ) {
-		shelf_index_counter = 0;
-
-		var i, x, y, data, pixel;
-
-		if ( image === PS.ERROR ) {
-			PS.debug( "onMapLoad(): image load error\n" );
-			return;
-		}
-
-		mapdata = image; // save map data for later
-
-		// Prepare grid for map drawing
-
-		imagemap.width = GRID_X = image.width;
-		imagemap.height = GRID_Y = image.height;
-
-		PS.gridSize( GRID_X, GRID_Y );
-		PS.border( PS.ALL, PS.ALL, 0 );
-
-		// Translate map pixels to data format expected by imagemap
-
-		i = 0; // init pointer into imagemap.data array
-
-		for ( y = 0; y < GRID_Y; y += 1 ) {
-			for ( x = 0; x < GRID_X; x += 1 ) {
-				data = MAP_GROUND; // assume ground
-				pixel = image.data[ i ];
-				switch ( pixel ) {
-					case GROUND_COLOR:
-						break; // no need to do anything
-					case PLATFORM_COLOR:
-						data = MAP_PLATFORM; // found a platform!
-						break;
-					case SCROLL_COLOR:
-						scroll_place( x, y ); // found a scroll!
-						break;
-					case ACTOR_COLOR:
-						actor_x = x; // establish initial location of actor
-						actor_y = y;
-						break;
-					case SHELF_COLOR:
-						shelf_init( x, y ); //place shelf
-						break;
-					default:
-						PS.debug( "onMapLoad(): unrecognized pixel value\n" );
-						PS.debug("Pixel value: " + pixel + "\n");
-						break;
-				}
-				imagemap.data[ i ] = data; // install translated data
-				i += 1; // update array pointer
-			}
-		}
-
-		// Now we can complete the initialization
-
-		GROUND_RGB = PS.unmakeRGB( GROUND_COLOR, {} );
-		PLATFORM_RGB = PS.unmakeRGB( PLATFORM_COLOR, {} );
-		draw_map( imagemap );
-
-		actor_sprite = PS.spriteSolid( 1, 1 ); // Create 1x1 solid sprite, save its ID
-		PS.spriteSolidColor( actor_sprite, ACTOR_COLOR ); // assign color
-		PS.spritePlane( actor_sprite, ACTOR_PLANE ); // Move to assigned plane
-
-		actor_place( actor_x, actor_y );
-		pathmap = PS.pathMap( imagemap );
-		timer_id = PS.timerStart(SPEED, Update);
-	};
-
 	// Load the image map in format 1
 	PS.imageLoad( "images/level1fixed2.gif", onMapLoad, 1 );
 
@@ -367,7 +382,7 @@ PS.init = function( system, options ) {
 		}
 		PS.dbEvent( TEAM, "startup", user );
 		PS.dbSend( TEAM, PS.CURRENT, { discard : true } );
-	}, { active : true } );
+	}, { active : false } );
 	
 	// Change the false in the final line above to true
 	// before deploying the code to your Web site.
