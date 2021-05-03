@@ -162,20 +162,22 @@ var scroll_find = function ( x, y ) {
 	PS.alpha( x, y, PS.ALPHA_TRANSPARENT );
 	PS.statusText("Level Complete!");
 	PS.gridPlane( oplane );
-	scroll_found = true;
-	level_progress();
+//	scroll_found = true;
+//	level_progress();
 }
-
+/*
 var level_progress = function (){
-//	var CURRENT_LEVEL;
-//	CURRENT_LEVEL = levels[];
+	var CURRENT_LEVEL;
+	CURRENT_LEVEL = levels[0];
 	if (scroll_found == true){
-//		if (CURRENT_LEVEL = levels[0]
+		CURRENT_LEVEL++;
+		PS.debug(CURRENT_LEVEL);
+	//	PS.imageLoad( "images/rightcolors.gif", onMapLoad, 1 );
+	//	scroll_found = false;
 
-		PS.imageLoad( "images/rightcolors.gif", onMapLoad, 1 );
-		scroll_found = false;
 	}
 }
+ */
 
 var actor_step = function ( h, v ) {
 	var nx, ny;
