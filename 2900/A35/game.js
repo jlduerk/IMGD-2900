@@ -19,7 +19,7 @@ Any value returned is ignored.
 [options : Object] = A JavaScript object with optional data properties; see API documentation for details.
 */
 
-var SPEED = 10;
+var SPEED = 6;
 
 var GRID_X = 0;
 var GRID_Y = 0;
@@ -56,6 +56,12 @@ var pathmap;
 
 var mapdata;
 
+//display colors
+var BACKGROUND_COLOR = 0xb8a441;
+var PLAYER_COLOR = 0x135cea;
+var SHELF_ACTUAL_COLOR = 0xff005a;
+var SCROLL_ACTUAL_COLOR = 0x99dfbd;
+
 var shelves = []; //array of shelves to look through on Update for gravity
 var levels = ["images/level1fixed2.gif", "images/level2test.gif"]; //array to keep track of levels
 
@@ -85,7 +91,7 @@ var is_shelf = function ( x, y ) {
 var shade = function ( color ) {
 	var RANGE, vary, r, g, b;
 
-	RANGE = 32;
+	RANGE = 10;
 
 	vary = function ()  {
 		return ( PS.random( RANGE * 2 ) - RANGE );
@@ -117,7 +123,7 @@ var actor_place = function ( x, y ) {
 var shelf_init = function( shelf_x, shelf_y ) {
 	//shelf_index_counter += 1;
 	var shelf_sprite = PS.spriteSolid( 1, 1 ); // Create 1x1 solid sprite, save its ID
-	PS.spriteSolidColor( shelf_sprite, SHELF_COLOR ); // assign color
+	PS.spriteSolidColor( shelf_sprite, SHELF_ACTUAL_COLOR ); // assign color
 	PS.spritePlane( shelf_sprite, SHELF_PLANE ); // Move to assigned plane
 
 	var shelf_struct = {
@@ -139,7 +145,7 @@ var shelf_place = function ( x, y, index ) {
 	PS.spriteMove( shelves[index].sprite, x, y );
 	shelves[index].x = x;
 	shelves[index].y = y;
-	PS.spriteSolidColor(shelves[index].sprite, PS.COLOR_VIOLET);
+	PS.spriteSolidColor(shelves[index].sprite, SHELF_ACTUAL_COLOR);
 
 	PS.gridPlane( oplane );
 };
@@ -148,7 +154,7 @@ var scroll_place = function ( x, y ) {
 	var oplane = PS.gridPlane(); // save og plane
 
 	PS.gridPlane( SCROLL_PLANE );
-	PS.color( x, y, SCROLL_COLOR );
+	PS.color( x, y, SCROLL_ACTUAL_COLOR );
 	PS.alpha( x, y, PS.ALPHA_OPAQUE );
 	PS.data( x, y, SCROLL_MARKER );
 
@@ -326,12 +332,12 @@ var onMapLoad = function ( image ) {
 
 	// Now we can complete the initialization
 
-	GROUND_RGB = PS.unmakeRGB( GROUND_COLOR, {} );
+	GROUND_RGB = PS.unmakeRGB( BACKGROUND_COLOR, {} );
 	PLATFORM_RGB = PS.unmakeRGB( PLATFORM_COLOR, {} );
 	draw_map( imagemap );
 
 	actor_sprite = PS.spriteSolid( 1, 1 ); // Create 1x1 solid sprite, save its ID
-	PS.spriteSolidColor( actor_sprite, ACTOR_COLOR ); // assign color
+	PS.spriteSolidColor( actor_sprite, PLAYER_COLOR ); // assign color
 	PS.spritePlane( actor_sprite, ACTOR_PLANE ); // Move to assigned plane
 
 	actor_place( actor_x, actor_y );
