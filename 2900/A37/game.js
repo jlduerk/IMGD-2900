@@ -203,6 +203,16 @@ var actor_step = function ( h, v ) {
 		var shelf_in_way = is_shelf( nx, ny );
 		if ( shelf_in_way >= 0) {
 			shelf_step(h, 0, shelf_in_way);
+			// make it so you can't just sit in the shelves
+			var direction = 0;
+			if (h > 0) {
+				direction = 1;
+			} else if (h < 0) {
+				direction = -1;
+			}
+			if (is_platform( nx + direction, ny )) {
+				return;
+			}
 		}
 	}
 
@@ -229,6 +239,17 @@ var shelf_step = function ( h, v , index) {
 
 	if ( is_platform( nx, ny ) ) {
 		return;
+	}
+	if (is_shelf( nx, ny) >= 0 && v > 0) {
+		actor_onground = true;
+		return;
+	}
+
+	if (h != 0) { //horizontal movement
+		var shelf_in_way = is_shelf( nx, ny );
+		if ( shelf_in_way >= 0) {
+			shelf_step(h, 0, shelf_in_way);
+		}
 	}
 
 	// Is new location off the grid?
@@ -342,7 +363,7 @@ var onMapLoad = function ( image ) {
 //	pathmap = PS.pathMap( imagemap );
 	timer_id = PS.timerStart(SPEED, Update);
 
-	PS.statusText( "Collect the scroll!" );
+	PS.statusText( "Collect the scroll! (Space to reset level.)" );
 };
 // Similar to Update() in Unity
 // 1 timer for everything
@@ -399,7 +420,6 @@ PS.init = function( system, options ) {
 PS.keyDown = function( key, shift, ctrl, options ) {
 	switch ( key ) {
 		case PS.KEY_ARROW_UP:
-		case 32: //space
 		case 119:
 		case 87: {
 			//actor_step( 0, -1 ); // move UP (v = -1)
@@ -419,6 +439,10 @@ PS.keyDown = function( key, shift, ctrl, options ) {
 		case 100:
 		case 68: {
 			actor_step( 1, 0 ); // move RIGHT (h = 1)
+			break;
+		}
+		case 32: { //space
+			PS.imageLoad( levels[currentLevel], onMapLoad, 1 );
 			break;
 		}
 	}
