@@ -63,7 +63,7 @@ var SHELF_ACTUAL_COLOR = 0xff005a;
 var SCROLL_ACTUAL_COLOR = 0x99dfbd;
 
 var shelves = []; //array of shelves to look through on Update for gravity
-var levels = ["images/level1fixed2.gif", "images/rightcolorsforreallmao.gif"]; //array to keep track of levels
+var levels = ["images/level1.gif", "images/level2.gif"]; //array to keep track of levels
 var currentLevel = 0;
 
 var imagemap = {
@@ -339,7 +339,7 @@ var onMapLoad = function ( image ) {
 	PS.spritePlane( actor_sprite, ACTOR_PLANE ); // Move to assigned plane
 
 	actor_place( actor_x, actor_y );
-	pathmap = PS.pathMap( imagemap );
+//	pathmap = PS.pathMap( imagemap );
 	timer_id = PS.timerStart(SPEED, Update);
 
 	PS.statusText( "Collect the scroll!" );
