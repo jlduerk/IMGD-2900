@@ -58,6 +58,8 @@ var pathmap;
 
 var mapdata;
 
+var gameComplete = false;
+
 //display colors
 var BACKGROUND_COLOR = 0xb8a441;
 var PLAYER_COLOR = 0x135cea;
@@ -181,6 +183,7 @@ var level_progress = function (){
 	}
 	else {
 		PS.statusText("Wisdom is knowing we can't know everything.");
+		gameComplete = true;
 	}
 }
 
@@ -445,7 +448,9 @@ PS.keyDown = function( key, shift, ctrl, options ) {
 			break;
 		}
 		case 32: { //space
-			PS.imageLoad( levels[currentLevel], onMapLoad, 1 );
+			if (!gameComplete) {
+				PS.imageLoad( levels[currentLevel], onMapLoad, 1 );
+			}
 			break;
 		}
 	}
