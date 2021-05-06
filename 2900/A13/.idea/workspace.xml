@@ -4,6 +4,8 @@
     <list default="true" id="98fdfc00-b3fe-4f30-97b0-d8a623617a28" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../A37/game.js" beforeDir="false" afterPath="$PROJECT_DIR$/../A37/game.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../A37/images/level2.gif" beforeDir="false" afterPath="$PROJECT_DIR$/../A37/images/level2.gif" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../A37/images/level3.gif" beforeDir="false" afterPath="$PROJECT_DIR$/../A37/images/level3.gif" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -80,6 +82,11 @@
       <workItem from="1620071364908" duration="1510000" />
       <workItem from="1620073840956" duration="36000" />
       <workItem from="1620250218143" duration="1642000" />
+      <workItem from="1620261083878" duration="1786000" />
+      <workItem from="1620262919466" duration="653000" />
+      <workItem from="1620269005515" duration="1809000" />
+      <workItem from="1620271383508" duration="1782000" />
+      <workItem from="1620273393095" duration="1473000" />
     </task>
     <servers />
   </component>

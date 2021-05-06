@@ -26,6 +26,8 @@ var GRID_Y = 0;
 var GROUND_COLOR = PS.COLOR_GREEN;
 var ACTOR_COLOR = PS.COLOR_BLUE;
 var PLATFORM_COLOR = 0x600000;
+var BACK_COLOR = 0x9B5316;
+var TEXT_COLOR = PS.COLOR_WHITE;
 var MAP_PLATFORM = 0;
 var MAP_GROUND = 1;
 var GROUND_RGB;
@@ -63,7 +65,7 @@ var SHELF_ACTUAL_COLOR = 0xff005a;
 var SCROLL_ACTUAL_COLOR = 0x99dfbd;
 
 var shelves = []; //array of shelves to look through on Update for gravity
-var levels = ["images/level1.gif", "images/level2.gif"]; //array to keep track of levels
+var levels = ["images/level1.gif", "images/level2.gif", "images/level3.gif", "images/level4.gif", "images/endscreen (4).gif"]; //array to keep track of levels
 var currentLevel = 0;
 
 var imagemap = {
@@ -178,7 +180,7 @@ var level_progress = function (){
 		PS.imageLoad( levels[currentLevel], onMapLoad, 1 );
 	}
 	else {
-		PS.statusText("Congrats! You have collected all the scrolls.");
+		PS.statusText("Wisdom is knowing we can't know everything.");
 	}
 }
 
@@ -314,6 +316,7 @@ var onMapLoad = function ( image ) {
 
 	PS.gridSize( GRID_X, GRID_Y );
 	PS.border( PS.ALL, PS.ALL, 0 );
+	PS.gridColor(BACK_COLOR);
 
 	// Translate map pixels to data format expected by imagemap
 
@@ -363,6 +366,7 @@ var onMapLoad = function ( image ) {
 //	pathmap = PS.pathMap( imagemap );
 	timer_id = PS.timerStart(SPEED, Update);
 
+	PS.statusColor(TEXT_COLOR);
 	PS.statusText( "Collect the scroll! (Space to reset level.)" );
 };
 // Similar to Update() in Unity
@@ -391,7 +395,6 @@ PS.init = function( system, options ) {
 
 	// Load the image map in format 1
 	PS.imageLoad( levels[currentLevel] , onMapLoad, 1 );
-
 	 //PS.gridSize( 16, 16 );
 
 	//sampleShelf = PS.spriteSolid(1, 1);
