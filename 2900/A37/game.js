@@ -19,7 +19,7 @@ Any value returned is ignored.
 [options : Object] = A JavaScript object with optional data properties; see API documentation for details.
 */
 
-var SPEED = 6;
+var SPEED = 9;
 
 var GRID_X = 0;
 var GRID_Y = 0;
@@ -67,7 +67,7 @@ var SHELF_ACTUAL_COLOR = 0xff005a;
 var SCROLL_ACTUAL_COLOR = 0x99dfbd;
 
 var shelves = []; //array of shelves to look through on Update for gravity
-var levels = ["images/level1fixed2.gif", "images/level2.gif", "images/level3.gif", "images/level4.gif", "images/endscreen (4).gif"]; //array to keep track of levels
+var levels = ["images/level1.gif", "images/level2.gif", "images/level3.gif", "images/level4.gif", "images/level5.gif", "images/level6.gif", "images/level7.gif", "images/finallevel.gif", "images/endscreen.gif"]; //array to keep track of levels
 var currentLevel = 0;
 
 var imagemap = {
@@ -173,6 +173,7 @@ var scroll_find = function ( x, y ) {
 	PS.alpha( x, y, PS.ALPHA_TRANSPARENT );
 	PS.statusText("Level Complete!");
 	PS.gridPlane( oplane );
+	PS.audioPlay("perc_shaker");
 	level_progress();
 }
 
@@ -431,6 +432,7 @@ PS.keyDown = function( key, shift, ctrl, options ) {
 			//actor_step( 0, -1 ); // move UP (v = -1)
 			if (actor_gravity == -1 && actor_onground) {
 				actor_gravity = actor_jumpheight;
+				PS.audioPlay("perc_bongo_low");
 			} 
 			
 			break;
