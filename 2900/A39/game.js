@@ -171,7 +171,7 @@ var scroll_find = function ( x, y ) {
 	var oplane = PS.gridPlane();
 	PS.gridPlane( SCROLL_PLANE );
 	PS.alpha( x, y, PS.ALPHA_TRANSPARENT );
-	PS.statusText("Level Complete!");
+	//PS.statusText("Level Complete!");
 	PS.gridPlane( oplane );
 	PS.audioPlay("perc_shaker");
 	level_progress();
@@ -183,7 +183,7 @@ var level_progress = function (){
 		PS.imageLoad( levels[currentLevel], onMapLoad, 1 );
 	}
 	else {
-		PS.statusText("Wisdom is knowing we can't know everything.");
+		//PS.statusText("Wisdom is knowing we can't know everything.");
 		gameComplete = true;
 	}
 }
@@ -371,7 +371,7 @@ var onMapLoad = function ( image ) {
 	timer_id = PS.timerStart(SPEED, Update);
 
 	PS.statusColor(TEXT_COLOR);
-	PS.statusText( "Collect the scroll! (Space to reset level.)" );
+	PS.statusText( "Biblio and the Search for Papyrus" );
 };
 // Similar to Update() in Unity
 // 1 timer for everything
