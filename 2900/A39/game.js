@@ -67,7 +67,7 @@ var SHELF_ACTUAL_COLOR = 0xff005a;
 var SCROLL_ACTUAL_COLOR = 0x99dfbd;
 
 var shelves = []; //array of shelves to look through on Update for gravity
-var levels = ["images/level1.gif", "images/level2.gif", "images/level3.gif", "images/level4.gif", "images/level5.gif", "images/level6.gif", "images/level7.gif", "images/finallevel.gif", "images/endscreen.gif", "images/End.gif"]; //array to keep track of levels
+var levels = ["images/level1.gif", "images/level2.gif", "images/level3.gif", "images/level4.gif", "images/level5.gif", "images/level6.gif", "images/level7.gif", "images/finallevel.gif", "images/endscreenv2.gif"]; //array to keep track of levels
 var currentLevel = 0;
 
 var imagemap = {
