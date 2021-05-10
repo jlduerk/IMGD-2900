@@ -19,7 +19,7 @@ Any value returned is ignored.
 [options : Object] = A JavaScript object with optional data properties; see API documentation for details.
 */
 
-var SPEED = 9;
+var SPEED = 30;
 
 var GRID_X = 0;
 var GRID_Y = 0;
